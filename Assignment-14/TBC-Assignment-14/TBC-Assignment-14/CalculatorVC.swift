@@ -11,6 +11,10 @@ import UIKit
 final class CalculatorVC: UIViewController {
     private var isDark: Bool = false
     private let gradient = CAGradientLayer()
+    private let numberTitles = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "AC"]
+    private let operationImages = ["percent", "divide", "multiply", "minus", "plus", "equal", "moon"]
+    private var numberButtons: [NumberBtns] = []
+    private var operationButtons: [OperationBtns] = []
     
     private let resultsView: UIView = {
        let view = UIView()
@@ -124,32 +128,23 @@ final class CalculatorVC: UIViewController {
         
         return stackView
     }()
-        
-    let dotBtn = NumberBtns(buttonTitle: ".")
-    let zeroBtn = NumberBtns(buttonTitle: "0")
-    let oneBtn = NumberBtns(buttonTitle: "1")
-    let twoBtn = NumberBtns(buttonTitle: "2")
-    let threeBtn = NumberBtns(buttonTitle: "3")
-    let fourBtn = NumberBtns(buttonTitle: "4")
-    let fiveBtn = NumberBtns(buttonTitle: "5")
-    let sixBtn = NumberBtns(buttonTitle: "6")
-    let sevenBtn = NumberBtns(buttonTitle: "7")
-    let eightBtn = NumberBtns(buttonTitle: "8")
-    let nineBtn = NumberBtns(buttonTitle: "9")
-    let resetBtn = NumberBtns(buttonTitle: "AC")
-    let percentBtn = OperationBtns(buttonImage: "percent")
-    let divideBtn = OperationBtns(buttonImage: "divide")
-    let multiplyBtn = OperationBtns(buttonImage: "multiply")
-    let minusBtn = OperationBtns(buttonImage: "minus")
-    let plusBtn = OperationBtns(buttonImage: "plus")
-    let equalBtn = OperationBtns(buttonImage: "equal")
-    let themeSwitchBtn = OperationBtns(buttonImage: "moon")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        setupUI()
         viewWillLayoutSubviews()
+        
+        for title in numberTitles {
+            let button = NumberBtns(buttonTitle: title)
+            numberButtons.append(button)
+        }
+        
+        for image in operationImages {
+            let button = OperationBtns(buttonImage: image)
+            operationButtons.append(button)
+        }
+        
+        setupUI()
     }
     
     private func setupUI() {
@@ -203,8 +198,8 @@ final class CalculatorVC: UIViewController {
         
         numbersStackView.rightAnchor.constraint(equalTo: numbersView.rightAnchor, constant: -33).isActive = true
         numbersStackView.leftAnchor.constraint(equalTo: numbersView.leftAnchor, constant: 33).isActive = true
-        numbersStackView.topAnchor.constraint(equalTo: numbersView.topAnchor, constant: 38).isActive = true
-        numbersStackView.bottomAnchor.constraint(equalTo: numbersView.bottomAnchor, constant: -56).isActive = true
+        numbersStackView.topAnchor.constraint(equalTo: numbersView.topAnchor, constant: 30).isActive = true
+        numbersStackView.bottomAnchor.constraint(equalTo: numbersView.bottomAnchor, constant: -36).isActive = true
     }
     
     private func setupNumbersColStackView() {
@@ -224,44 +219,44 @@ final class CalculatorVC: UIViewController {
     
     
     private func setupBtns() {
-        [themeSwitchBtn, sevenBtn, fourBtn, oneBtn, resetBtn].forEach { firstColStackView.addArrangedSubview($0) }
+        [operationButtons[6], numberButtons[7], numberButtons[4], numberButtons[1], numberButtons[11]].forEach { firstColStackView.addArrangedSubview($0) }
         
-        [percentBtn, eightBtn, fiveBtn, twoBtn, zeroBtn].forEach { secondColStackView.addArrangedSubview($0) }
+        [operationButtons[0], numberButtons[8], numberButtons[5], numberButtons[2], numberButtons[0]].forEach { secondColStackView.addArrangedSubview($0) }
         
-        [divideBtn, nineBtn, sixBtn, threeBtn, dotBtn].forEach { thirdColStackView.addArrangedSubview($0) }
+        [operationButtons[1], numberButtons[9], numberButtons[6], numberButtons[3], numberButtons[10]].forEach { thirdColStackView.addArrangedSubview($0) }
         
-        [multiplyBtn, minusBtn, plusBtn].forEach { threeBtnStackView.addArrangedSubview($0) }
+        [operationButtons[2], operationButtons[3], operationButtons[4]].forEach { threeBtnStackView.addArrangedSubview($0) }
 
-        equalBtnStackView.addArrangedSubview(equalBtn)
+        equalBtnStackView.addArrangedSubview(operationButtons[5])
         
         setupThemeSwitchBtn()
         setupEqualBtn()
     }
     
     private func setupThemeSwitchBtn() {
-        themeSwitchBtn.addTarget(self, action: #selector(changeTheme), for: .touchUpInside)
-        themeSwitchBtn.clipsToBounds = true
-        themeSwitchBtn.backgroundColor = .none
-        themeSwitchBtn.tintColor = .red
-        themeSwitchBtn.layer.borderWidth = 1
-        themeSwitchBtn.layer.cornerRadius = 33
-        themeSwitchBtn.layer.borderColor = UIColor.systemGray4.cgColor
+        operationButtons[6].addTarget(self, action: #selector(changeTheme), for: .touchUpInside)
+        operationButtons[6].clipsToBounds = true
+        operationButtons[6].backgroundColor = .none
+        operationButtons[6].tintColor = .red
+        operationButtons[6].layer.borderWidth = 1
+        operationButtons[6].layer.cornerRadius = 33
+        operationButtons[6].layer.borderColor = UIColor.systemGray4.cgColor
     }
     
     @objc private func changeTheme() {
         isDark.toggle()
         
-        themeSwitchBtn.setImage(UIImage(systemName: isDark ? "sun.max" : "moon"), for: .normal)
+        operationButtons[6].setImage(UIImage(systemName: isDark ? "sun.max" : "moon"), for: .normal)
         view.overrideUserInterfaceStyle = isDark ? .dark : .light
         view.backgroundColor = isDark ? .systemFill : .white
     }
     
     private func setupEqualBtn() {
-        equalBtn.layer.shadowColor = UIColor(red: 247/255, green: 60/255, blue: 87/255, alpha: 1).cgColor
-        equalBtn.layer.shadowOffset = .zero
-        equalBtn.layer.shadowOpacity = 0.7
-        equalBtn.layer.shadowRadius = 10.0
-        equalBtn.layer.masksToBounds = false
+        operationButtons[5].layer.shadowColor = UIColor(red: 247/255, green: 60/255, blue: 87/255, alpha: 1).cgColor
+        operationButtons[5].layer.shadowOffset = .zero
+        operationButtons[5].layer.shadowOpacity = 0.7
+        operationButtons[5].layer.shadowRadius = 10.0
+        operationButtons[5].layer.masksToBounds = false
         
         applyGradient()
     }
@@ -273,7 +268,7 @@ final class CalculatorVC: UIViewController {
         gradient.colors = [colorOne.cgColor, colorTwo.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.cornerRadius = 33
-        equalBtn.layer.insertSublayer(gradient, below: equalBtn.imageView?.layer)
+        operationButtons[5].layer.insertSublayer(gradient, below: operationButtons[5].imageView?.layer)
         updateGradientFrame()
     }
     
@@ -283,7 +278,7 @@ final class CalculatorVC: UIViewController {
     }
     
     private func updateGradientFrame() {
-        gradient.frame = equalBtn.bounds
+        gradient.frame = operationButtons[5].bounds
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -292,4 +287,9 @@ final class CalculatorVC: UIViewController {
             self?.updateGradientFrame()
         }, completion: nil)
     }
+}
+
+import SwiftUI
+#Preview() {
+    return CalculatorVC()
 }
