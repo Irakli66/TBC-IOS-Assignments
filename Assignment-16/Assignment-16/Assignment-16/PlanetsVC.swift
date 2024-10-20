@@ -29,10 +29,10 @@ final class PlanetsVC: UIViewController {
     }()
     
     var planetsList: [Planet] = [
-        Planet(name: "Mars", area: 1_258_250 , image: UIImage(named: "Mars") ?? UIImage(), temperature: -18, mass: 60745),
-        Planet(name: "Jupiter", area: 6_142_210, image: UIImage(named: "Jupiter") ?? UIImage(), temperature: 25, mass: 620745),
-        Planet(name: "Earth", area: 500_100_100, image: UIImage(named: "Earth") ?? UIImage(), temperature: 39, mass: 607445),
-        Planet(name: "Saturn", area: 2_608_250, image: UIImage(named: "Saturn") ?? UIImage(), temperature: 11, mass: 607425)
+        Planet(image: UIImage(named: "Mars") ?? UIImage(), name: "Mars", area: 1_258_250, temperature: -18, mass: 60745),
+        Planet(image: UIImage(named: "Jupiter") ?? UIImage(), name: "Jupiter", area: 6_142_210, temperature: 25, mass: 620745),
+        Planet(image: UIImage(named: "Earth") ?? UIImage(), name: "Earth", area: 500_100_100, temperature: 39, mass: 607445),
+        Planet(image: UIImage(named: "Saturn") ?? UIImage(), name: "Saturn", area: 2_608_250, temperature: 11, mass: 607425)
     ]
     
     override func viewDidLoad() {

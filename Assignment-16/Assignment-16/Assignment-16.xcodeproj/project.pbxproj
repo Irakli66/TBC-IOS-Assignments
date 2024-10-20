@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CBAAC3662CC57781008319FE /* PlanetDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAAC3652CC57781008319FE /* PlanetDetailsTableViewCell.swift */; };
 		CBB18BBE2CC24A9A00031D5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB18BBD2CC24A9A00031D5C /* AppDelegate.swift */; };
 		CBB18BC02CC24A9A00031D5C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB18BBF2CC24A9A00031D5C /* SceneDelegate.swift */; };
 		CBB18BC22CC24A9A00031D5C /* PlanetsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB18BC12CC24A9A00031D5C /* PlanetsVC.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CBAAC3652CC57781008319FE /* PlanetDetailsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetDetailsTableViewCell.swift; sourceTree = "<group>"; };
 		CBB18BBA2CC24A9A00031D5C /* Assignment-16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Assignment-16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBB18BBD2CC24A9A00031D5C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CBB18BBF2CC24A9A00031D5C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				CBB18BC12CC24A9A00031D5C /* PlanetsVC.swift */,
 				CBB18BD12CC25D7800031D5C /* PlanetsDataCell.swift */,
 				CBB18BD32CC2676C00031D5C /* PlanetDetailsVC.swift */,
+				CBAAC3652CC57781008319FE /* PlanetDetailsTableViewCell.swift */,
 				CBB18BC62CC24A9B00031D5C /* Assets.xcassets */,
 				CBB18BC82CC24A9B00031D5C /* LaunchScreen.storyboard */,
 				CBB18BCB2CC24A9B00031D5C /* Info.plist */,
@@ -142,6 +145,7 @@
 			files = (
 				CBB18BC22CC24A9A00031D5C /* PlanetsVC.swift in Sources */,
 				CBB18BD42CC2676C00031D5C /* PlanetDetailsVC.swift in Sources */,
+				CBAAC3662CC57781008319FE /* PlanetDetailsTableViewCell.swift in Sources */,
 				CBB18BD22CC25D7800031D5C /* PlanetsDataCell.swift in Sources */,
 				CBB18BBE2CC24A9A00031D5C /* AppDelegate.swift in Sources */,
 				CBB18BC02CC24A9A00031D5C /* SceneDelegate.swift in Sources */,

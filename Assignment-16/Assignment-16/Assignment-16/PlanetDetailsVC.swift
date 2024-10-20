@@ -1,32 +1,27 @@
-//
-//  PlanetDetailsVC.swift
-//  Assignment-16
-//
-//  Created by irakli kharshiladze on 18.10.24.
-//
 
 import UIKit
 
-final class Planet {
+struct Planet {
     let image: UIImage
     let name: String
     let area: Int
     let temperature: Int
     let mass: Int
-    
-    init(name: String, area: Int, image: UIImage, temperature: Int, mass: Int) {
-        self.name = name
-        self.area = area
-        self.image = image
-        self.temperature = temperature
-        self.mass = mass
-    
-    }
 }
 
+
 class PlanetDetailsVC: UIViewController {
-    
     var planet: Planet? = nil
+    var planetIndex: Int = 0
+    
+    private let planetNameNavigationFavoriteStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        
+        return stackView
+    }()
     
     private let navigationButton: UIButton = {
         let button = UIButton()
@@ -41,203 +36,112 @@ class PlanetDetailsVC: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.textColor = UIColor(red: 179/255, green: 68/255, blue: 22/255, alpha: 1)
+        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 36, weight: .bold)
         
         return label
     }()
     
+    private let favoriteButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "star.fill"), for: .normal)
+        button.tintColor = .white
+        
+        return button
+    }()
+    
     private let planetImageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-
+        
         return imageView
     }()
     
-    private let planetDetailsStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        
-        return stackView
-    }()
-    
-    private let areaStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.layer.cornerRadius = 15
-        stackView.layer.borderColor = UIColor.white.cgColor
-        stackView.layer.borderWidth = 1
-        
-        return stackView
-    }()
-    
-    private let temperatureStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.layer.cornerRadius = 15
-        stackView.layer.borderColor = UIColor.white.cgColor
-        stackView.layer.borderWidth = 1
-        
-        return stackView
-    }()
-    
-    private let massStackView: UIStackView = {
-       let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.layer.cornerRadius = 15
-        stackView.layer.borderColor = UIColor.white.cgColor
-        stackView.layer.borderWidth = 1
-        
-        return stackView
-    }()
-    
     private let planetDetailsTableView: UITableView = {
-       let tableView = UITableView()
+        let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         return tableView
     }()
     
-    private let planetAreaLbl: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "Area"
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-    
-    private let planetArea: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-    
-    private let planetTemperatureLbl: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "Temperature"
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-    
-    private let planetTemperature: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-    
-    private let planetMassLbl: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "Mass"
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-    
-    private let planetMass: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 18)
-        
-        return label
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
     
+    var addFavorites: (()->Void)?
+
     private func setupUI() {
         view.backgroundColor = UIColor(red: 33/255, green: 13/255, blue: 4/255, alpha: 1)
-        setupPlanetName()
-        setupNavigationButton()
+        setupPlanetNameNavigationFavoriteStackView()
         setupPlanetImageView()
-        setupPlanetDetailsStackView()
-        setupPlanetDetailsStackViewRows()
-        setupPlanetDetails()
+        setupPlanetDetailsTableView()
     }
     
-    private func setupPlanetName() {
-        view.addSubview(planetName)
+    private func setupPlanetNameNavigationFavoriteStackView() {
+        view.addSubview(planetNameNavigationFavoriteStackView)
         
         NSLayoutConstraint.activate([
-            planetName.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            planetName.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            planetNameNavigationFavoriteStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 55),
+            planetNameNavigationFavoriteStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            planetNameNavigationFavoriteStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
+            
         ])
+        setupNavigationButton()
         
+        planetNameNavigationFavoriteStackView.addArrangedSubview(planetName)
         planetName.text = planet?.name
+        
+        setupFavoriteButton()
+        
     }
     
     private func setupNavigationButton() {
-        view.addSubview(navigationButton)
-        
-        NSLayoutConstraint.activate([
-            navigationButton.trailingAnchor.constraint(equalTo: planetName.leadingAnchor, constant: -90),
-            navigationButton.centerYAnchor.constraint(equalTo: planetName.centerYAnchor)
-        ])
+        planetNameNavigationFavoriteStackView.addArrangedSubview(navigationButton)
         
         navigationButton.addAction(UIAction(handler: { [weak self] action in
             self?.navigationController?.popViewController(animated: true)
         }), for: .touchUpInside)
     }
     
+    private func setupFavoriteButton() {
+        planetNameNavigationFavoriteStackView.addArrangedSubview(favoriteButton)
+    }
+    
+
+    
     private func setupPlanetImageView() {
         view.addSubview(planetImageView)
         
-        planetImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        planetImageView.topAnchor.constraint(equalTo: planetName.bottomAnchor, constant: 60).isActive = true
-        planetImageView.heightAnchor.constraint(equalTo: planetImageView.widthAnchor).isActive = true
-        planetImageView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        NSLayoutConstraint.activate([
+            planetImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            planetImageView.topAnchor.constraint(equalTo: planetNameNavigationFavoriteStackView.bottomAnchor, constant: 85),
+            planetImageView.heightAnchor.constraint(equalTo: planetImageView.widthAnchor),
+            planetImageView.heightAnchor.constraint(equalToConstant: 280)
+        ])
         
         planetImageView.image = planet?.image
     }
     
-    private func setupPlanetDetailsStackView() {
-        view.addSubview(planetDetailsStackView)
+    private func setupPlanetDetailsTableView() {
+        view.addSubview(planetDetailsTableView)
         
         NSLayoutConstraint.activate([
-            planetDetailsStackView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 20),
-            planetDetailsStackView.topAnchor.constraint(equalTo: planetImageView.bottomAnchor,constant: 70),
-            planetDetailsStackView.rightAnchor.constraint(equalTo: view.rightAnchor,constant: -20),
-            planetDetailsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -60)
+            planetDetailsTableView.topAnchor.constraint(equalTo: planetImageView.bottomAnchor, constant: 80),
+            planetDetailsTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            planetDetailsTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            planetDetailsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
-    }
-    
-    private func setupPlanetDetailsStackViewRows() {
-        [areaStackView, temperatureStackView, massStackView].forEach {
-            planetDetailsStackView.addArrangedSubview($0)
-            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            $0.isLayoutMarginsRelativeArrangement = true
-            $0.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        }
-    }
-    
-    private func setupPlanetDetails() {
-        [planetAreaLbl, planetArea].forEach { areaStackView.addArrangedSubview($0) }
-        [planetTemperatureLbl, planetTemperature].forEach { temperatureStackView.addArrangedSubview($0) }
-        [planetMassLbl, planetMass].forEach { massStackView.addArrangedSubview($0) }
         
-        planetArea.text = "\(planet?.area ?? 0) km2"
-        planetTemperature.text = "\(planet?.temperature ?? 0)℃"
-        planetMass.text = "\(planet?.mass ?? 0) kg"
+        planetDetailsTableView.backgroundColor = .none
+        planetDetailsTableView.dataSource = self
+        planetDetailsTableView.delegate = self
+        planetDetailsTableView.register(PlanetDetailsTableViewCell.self, forCellReuseIdentifier: "PlanetDetailsTableViewCell")
+        
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -248,4 +152,32 @@ class PlanetDetailsVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
+}
+
+extension PlanetDetailsVC: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        [planet?.area, planet?.temperature, planet?.mass].count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "PlanetDetailsTableViewCell", for: indexPath) as? PlanetDetailsTableViewCell {
+            let planetDetails = ["\(planet?.area ?? 0) km2", "\(planet?.temperature ?? 0)℃", "\(planet?.mass ?? 0) kg"]
+            let currentStat = planetDetails[indexPath.row]
+            
+            cell.updateUI(title: "\(indexPath.row == 0 ? "Area" : indexPath.row == 1 ? "Temperature" : "Mass")", stat: currentStat)
+            
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
+    
+    
+}
+
+extension PlanetDetailsVC: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        80
+    }
 }
