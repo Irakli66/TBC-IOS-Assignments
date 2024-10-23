@@ -72,7 +72,6 @@ final class PlanetsViewController: UIViewController {
         planetsCollectionView.register(PlanetsCollectionViewCell.self, forCellWithReuseIdentifier: "PlanetsCollectionViewCell")
         planetsCollectionView.delegate = self
     }
-
 }
 
 extension PlanetsViewController: UICollectionViewDataSource {
@@ -105,9 +104,7 @@ extension PlanetsViewController: PlanetCellDelegate {
         } else {
             return printContent("empty")
         }
-        
     }
-    
 }
 
 extension PlanetsViewController: UICollectionViewDelegate {

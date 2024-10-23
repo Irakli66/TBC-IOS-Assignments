@@ -7,15 +7,6 @@
 
 import UIKit
 
-private func createLabels(labelTitle: String) -> UILabel {
-    let label = UILabel()
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.textColor = .white
-    label.font = UIFont.systemFont(ofSize: 18)
-    label.text = labelTitle
-    
-    return label
-}
 
 final class PlanetDetailsTableViewCell: UITableViewCell {
     var planet: Planet? = nil
@@ -51,6 +42,16 @@ final class PlanetDetailsTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    static private func createLabels(labelTitle: String) -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.text = labelTitle
+        
+        return label
     }
     
     private func setupDetailsStackView() {

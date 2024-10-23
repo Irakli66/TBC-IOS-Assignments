@@ -77,7 +77,7 @@ final class PlanetDetailsViewController: UIViewController {
         setupUI()
     }
     
-    var addFavorites: (()->Void)?
+    var addFavorites: (() -> Void)?
 
     private func setupUI() {
         view.backgroundColor = UIColor(red: 33/255, green: 13/255, blue: 4/255, alpha: 1)
@@ -149,7 +149,7 @@ final class PlanetDetailsViewController: UIViewController {
         view.addSubview(planetDetailsTableView)
         
         NSLayoutConstraint.activate([
-            planetDetailsTableView.topAnchor.constraint(equalTo: planetImageView.bottomAnchor, constant: 80),
+            planetDetailsTableView.topAnchor.constraint(equalTo: planetImageView.bottomAnchor, constant: 70),
             planetDetailsTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             planetDetailsTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             planetDetailsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
