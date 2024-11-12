@@ -1,0 +1,15 @@
+{
+  "originHash" : "77e6f2723cdc5b4b6f3647b84da344541452ae41bf9988a4a845c032cb41f196",
+  "pins" : [
+    {
+      "identity" : "networkpackage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Irakli66/NetworkPackage.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ef3961e0a55c1853d25acbe30b579fb111614bda"
+      }
+    }
+  ],
+  "version" : 3
+}
