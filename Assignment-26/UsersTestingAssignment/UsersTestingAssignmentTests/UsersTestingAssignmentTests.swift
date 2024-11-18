@@ -37,7 +37,15 @@ final class UsersTestingAssignmentTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(userViewModel.fullName,"\(user.name.title) \(user.name.first) \(user.name.last)", "Full name should be formatted correctly.")
+        XCTAssertEqual(userViewModel.fullName, "\(user.name.title) \(user.name.first) \(user.name.last)", "Full name should be formatted correctly.")
+    }
+    
+    func testIncompleteFullName() throws {
+        guard let user = user else {
+            return
+        }
+        
+        XCTAssertNotEqual(userViewModel.fullName, "\(user.name.first) \(user.name.last)", "Full name should be formatted correctly.")
     }
     
     func testContactNumber() throws {
@@ -45,7 +53,7 @@ final class UsersTestingAssignmentTests: XCTestCase {
             return
         }
         
-        XCTAssertEqual(userViewModel.contactNumber,[user.cell, user.phone].joined(separator: " / "), "Contact number should be formatted correctly.")
+        XCTAssertEqual(userViewModel.contactNumber, [user.cell, user.phone].joined(separator: " / "), "Contact number should be formatted correctly.")
     }
     
     func testThubmanilImageURL() throws {

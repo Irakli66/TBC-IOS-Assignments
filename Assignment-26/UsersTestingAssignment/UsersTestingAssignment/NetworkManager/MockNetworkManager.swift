@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol NetworkManagerProtocol {
+    func fetchUsers(withLimit limit: Int, completionHandler: @escaping ([User]) -> Void)
+}
+
 final class MockNetworkManager: NetworkManagerProtocol {
     
     var mockUsers: [User] = {

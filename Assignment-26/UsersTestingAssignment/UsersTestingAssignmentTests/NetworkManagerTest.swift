@@ -39,4 +39,11 @@ final class NetworkManagerTest: XCTestCase {
             XCTAssertTrue(users.isEmpty)
         }
     }
+    
+    func testFetchUsersWithExceedingLimit() {
+        mockNetworkManager.fetchUsers(withLimit: 10) { users in
+            XCTAssertEqual(users.count, 1)
+            XCTAssertEqual(users.first?.name.first, "Christian")
+        }
+    }
 }
