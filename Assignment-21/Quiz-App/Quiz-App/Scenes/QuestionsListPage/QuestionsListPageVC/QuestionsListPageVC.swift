@@ -98,8 +98,27 @@ final class QuestionsListPageVC: UIViewController {
         resetButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
         
         resetButton.addAction(UIAction(handler: { [weak self] _ in
-            self?.resetAnswers()
+            self?.showAlert()
         }), for: .touchUpInside)
+    }
+    
+    private func showAlert() {
+        let alertController = UIAlertController(
+            title: "Reset Answers",
+            message: "Are you sure you want to reset all answers?",
+            preferredStyle: .alert
+        )
+        
+        let resetAction = UIAlertAction(title: "Reset", style: .destructive) { [weak self] _ in
+            self?.resetAnswers()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addAction(resetAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true , completion: nil)
     }
     
     private func resetAnswers() {
@@ -107,6 +126,7 @@ final class QuestionsListPageVC: UIViewController {
         UserDefaults.standard.set(0, forKey: "incorrectAnswer")
         UserDefaults.standard.set([], forKey: "savedAnswers")
     }
+    
     
     private func setupQuestionsTableView() {
         pageWrapperView.addSubview(questionsTableview)
