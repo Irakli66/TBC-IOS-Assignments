@@ -1,4 +1,4 @@
-# გასწორებული ბაგები:<br>
+# გასწორებული ბაგები მე-20 დავალებაში:<br>
 1. MovieManager.swift: 
     - line 29-ზე დავამატე **.resume()**
 2. GenreManager.swift:
