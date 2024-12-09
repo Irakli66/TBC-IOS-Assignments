@@ -101,7 +101,6 @@ struct ContentView: View {
             }
             .padding(25)
         }
-        .background(.white)
         .padding(.top, 5)
         .scrollIndicators(.hidden)
     }

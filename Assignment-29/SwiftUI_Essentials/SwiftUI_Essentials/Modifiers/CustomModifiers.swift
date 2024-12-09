@@ -29,7 +29,6 @@ struct CustomTextField: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.system(size: 12, weight: .regular))
-            .foregroundColor(.black)
             .frame(height: 30)
             .padding(5)
             .background(Color.white)
