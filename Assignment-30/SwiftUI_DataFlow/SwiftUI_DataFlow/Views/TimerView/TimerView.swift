@@ -9,10 +9,13 @@ import SwiftUI
 
 struct TimerView: View {
     @StateObject private var viewModel = TimerViewModel()
+    @State private var isActive: Bool = false
+    @State private var alertMessage: String = ""
     @State private var timerName: String = ""
     @State private var hours: String = ""
     @State private var minutes: String = ""
     @State private var seconds: String = ""
+    @State private var showAlert: Bool = false
     
     var body: some View {
         VStack {
@@ -43,17 +46,18 @@ struct TimerView: View {
                     
                 }
                 Button("დამატება"){
-                    viewModel.addTimer(name: timerName, hours: hours, minutes: minutes, seconds: seconds)
-                    timerName = ""
-                    hours = ""
-                    minutes = ""
-                    seconds = ""
+                    addTimer()
                 }
                 .padding(.vertical, 10)
                 .padding(.horizontal, 50)
                 .foregroundStyle(.white)
                 .background(.azure)
                 .cornerRadius(8)
+                .alert("Invalid Input", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
                 
             }
             .padding(.horizontal, 20)
@@ -64,65 +68,92 @@ struct TimerView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.codGray)
     }
+    
+    private func addTimer() {
+        if let hoursValue = Int(hours), let minutesValue = Int(minutes), let secondsValue = Int(seconds) {
+            if hoursValue == 0 && minutesValue == 0 && secondsValue == 0 {
+                alertMessage = "ერთი ველი მაინც უნდა იყოს 0-ზე მეტი"
+                showAlert = true
+            } else {
+                viewModel.addTimer(name: timerName, hours: hours, minutes: minutes, seconds: seconds)
+                timerName = ""
+                hours = ""
+                minutes = ""
+                seconds = ""
+            }
+        } else if hours.isEmpty && minutes.isEmpty && seconds.isEmpty {
+            alertMessage = "ყველა ველი ცარიელია. გთხოვთ შეავსოთ ერთი ველი მაინც"
+            showAlert = true
+        } else {
+            alertMessage = "გთხოვთ შეიყვანოთ მხოლოდ რიცხვები"
+            showAlert = true
+        }
+    }
 }
-
-private extension TimerView {
-    struct TimerCard: View {
-        @EnvironmentObject var viewModel: TimerViewModel
-        
-        var body: some View {
-            ScrollView {
-                if viewModel.Timers.isEmpty {
-                    VStack {
-                        Spacer()
-                        Text("ტაიმერები არ გაქვს, დაამატე...")
-                            .font(.system(size: 20, weight: .medium))
-                            .foregroundStyle(.gray)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 200)
-                } else {
-                    LazyVStack(spacing: 15) {
-                        ForEach(viewModel.Timers, id: \.self.id) { timer in
-                            VStack(spacing: 15) {
-                                HStack {
-                                    Text(timer.name)
-                                        .foregroundStyle(.white)
-                                    Spacer()
-                                    Button(action: {
-                                        viewModel.removeTimer(with: timer.id)
-                                    }) {
-                                        Image(systemName: "trash")
-                                            .foregroundStyle(.redOrange)
-                                    }
-                                }
-                                .padding(.horizontal, 20)
-                                Text("\(timer.hours):\(timer.minutes):\(timer.seconds)")
-                                    .font(.system(size: 28, weight: .bold))
-                                    .foregroundStyle(.azure)
-                                HStack {
-                                    Button("დაწყება") {
-                                        
-                                    }
-                                    .buttonModifier(backgroundColor: .emerald)
-                                    Button("გადატვირთვა") {
-                                        
-                                    }
-                                    .buttonModifier(backgroundColor: .redOrange)
+struct TimerCard: View {
+    @EnvironmentObject var viewModel: TimerViewModel
+    
+    var body: some View {
+        ScrollView {
+            if viewModel.timers.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("ტაიმერები არ გაქვს, დაამატე...")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(.gray)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: 200)
+            } else {
+                LazyVStack(spacing: 15) {
+                    ForEach(viewModel.timers.reversed(), id: \.self.id) { timer in
+                        VStack(spacing: 15) {
+                            HStack {
+                                Text(timer.name)
+                                    .foregroundStyle(.white)
+                                Spacer()
+                                Button(action: {
+                                    viewModel.removeTimer(with: timer.id)
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundStyle(.redOrange)
                                 }
                             }
-                            .padding(.vertical, 20)
-                            .frame(maxWidth: .infinity)
-                            .background(.mineShaft)
-                            .cornerRadius(16)
-                            .padding(.horizontal, 15)
+                            .padding(.horizontal, 20)
+                            Text(timer.formatedTime(from: timer.duration))
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundStyle(.azure)
+                            HStack {
+                                if !timer.isRunning {
+                                    Button("დაწყება") {
+                                        viewModel.startTimer(with: timer)
+                                    }
+                                    .buttonModifier(backgroundColor: .emerald)
+                                } else {
+                                    Button("პაუზა") {
+                                        viewModel.pauseTimer(with: timer)
+                                    }
+                                    .buttonModifier(backgroundColor: .pizazz)
+                                }
+                                
+                                Button("გადატვირთვა") {
+                                    viewModel.resetTimer(with: timer)
+                                }
+                                .buttonModifier(backgroundColor: .redOrange)
+                            }
                         }
+                        .padding(.vertical, 20)
+                        .frame(maxWidth: .infinity)
+                        .background(.mineShaft)
+                        .cornerRadius(16)
+                        .padding(.horizontal, 15)
                     }
                 }
             }
         }
     }
 }
+
 
 
 #Preview {

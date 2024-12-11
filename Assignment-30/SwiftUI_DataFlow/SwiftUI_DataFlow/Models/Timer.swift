@@ -6,17 +6,19 @@
 //
 import SwiftUI
 
-struct Timer: Codable {
+struct TimerModel: Codable {
     var id = UUID()
-    let name: String
-    let hours: String
-    let minutes: String
-    let seconds: String
+    var name: String
+    var duration: TimeInterval
+    var defaultDuration: TimeInterval
+    var isRunning: Bool = false
     
-    init(name: String, hours: String = "00", minutes: String = "00", seconds: String = "00") {
-        self.name = name
-        self.hours = hours
-        self.minutes = minutes
-        self.seconds = seconds
+    func formatedTime(from seconds: TimeInterval) -> String {
+        let totalSeconds = Int(seconds)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }

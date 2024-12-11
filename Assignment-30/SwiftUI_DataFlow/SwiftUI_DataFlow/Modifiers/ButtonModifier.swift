@@ -28,6 +28,7 @@ struct TextFieldModifier: ViewModifier {
             .background(Color.shipGray)
             .cornerRadius(8)
             .multilineTextAlignment(alignment)
+            .keyboardType(alignment == .center ? .numberPad : .default)
     }
 }
 
