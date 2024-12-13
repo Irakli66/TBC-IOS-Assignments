@@ -70,23 +70,15 @@ struct TimerView: View {
     }
     
     private func addTimer() {
-        if let hoursValue = Int(hours), let minutesValue = Int(minutes), let secondsValue = Int(seconds) {
-            if hoursValue == 0 && minutesValue == 0 && secondsValue == 0 {
-                alertMessage = "ერთი ველი მაინც უნდა იყოს 0-ზე მეტი"
-                showAlert = true
-            } else {
-                viewModel.addTimer(name: timerName, hours: hours, minutes: minutes, seconds: seconds)
-                timerName = ""
-                hours = ""
-                minutes = ""
-                seconds = ""
-            }
-        } else if hours.isEmpty && minutes.isEmpty && seconds.isEmpty {
+        if hours.isEmpty && minutes.isEmpty && seconds.isEmpty {
             alertMessage = "ყველა ველი ცარიელია. გთხოვთ შეავსოთ ერთი ველი მაინც"
             showAlert = true
         } else {
-            alertMessage = "გთხოვთ შეიყვანოთ მხოლოდ რიცხვები"
-            showAlert = true
+            viewModel.addTimer(name: timerName, hours: hours, minutes: minutes, seconds: seconds)
+            timerName = ""
+            hours = ""
+            minutes = ""
+            seconds = ""
         }
     }
 }
