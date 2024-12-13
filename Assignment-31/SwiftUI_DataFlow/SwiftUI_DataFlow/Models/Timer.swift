@@ -12,6 +12,8 @@ struct TimerModel: Codable {
     var duration: TimeInterval
     var defaultDuration: TimeInterval
     var isRunning: Bool = false
+    var startDate: Date?
+    var history: [[String: String]] = []
     
     func formatedTime(from seconds: TimeInterval) -> String {
         let totalSeconds = Int(seconds)
@@ -22,3 +24,4 @@ struct TimerModel: Codable {
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }
+

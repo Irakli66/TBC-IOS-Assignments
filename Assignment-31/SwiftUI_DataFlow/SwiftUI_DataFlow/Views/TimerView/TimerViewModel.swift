@@ -44,6 +44,7 @@ final class TimerViewModel: ObservableObject {
     func startTimer(with timer: TimerModel) {
         guard let index = timers.firstIndex(where: { $0.id == timer.id }) else { return }
         timers[index].isRunning = true
+        timers[index].startDate = Date()
         
         if timers[index].duration == 0 {
             timers[index].duration = timer.defaultDuration
@@ -60,12 +61,14 @@ final class TimerViewModel: ObservableObject {
                     self?.resetTimer(with: timer)
                 }
             }
-        
     }
     
     func pauseTimer(with timer: TimerModel) {
         guard let index = timers.firstIndex(where: { $0.id == timer.id }) else { return }
         timers[index].isRunning = false
+        
+        updateHistory(for: &timers[index])
+        
         timerCancellables[timer.id]?.cancel()
         timerCancellables[timer.id] = nil
     }
@@ -73,10 +76,44 @@ final class TimerViewModel: ObservableObject {
     func resetTimer(with timer: TimerModel) {
         guard let index = timers.firstIndex(where: { $0.id == timer.id }) else { return }
         timers[index].isRunning = false
+        
+        updateHistory(for: &timers[index])
+        
         timerCancellables[timer.id]?.cancel()
         timerCancellables[timer.id] = nil
         timers[index].duration = timer.defaultDuration
     }
+    
+    private func updateHistory(for timer: inout TimerModel) {
+        guard let startDate = timer.startDate else { return }
+        let elapsed = Date().timeIntervalSince(startDate)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ka_GE")
+        dateFormatter.dateFormat = "dd MMM yyyy"
+        let today = dateFormatter.string(from: Date())
+        
+        if let index = timer.history.firstIndex(where: { $0["date"] == today }) {
+            if let previousTimeUsed = Int(timer.history[index]["timeUsed"] ?? "0") {
+                let updatedTimeUsed = previousTimeUsed + Int(elapsed) - 1
+                timer.history[index]["timeUsed"] = "\(updatedTimeUsed)"
+            }
+        } else {
+            let newEntry: [String: String] = [
+                "date": today,
+                "timeUsed": "\(Int(elapsed - 1))"
+            ]
+            timer.history.append(newEntry)
+        }
+        
+        timer.startDate = nil
+        if let timerIndex = timers.firstIndex(where: { $0.id == timer.id }) {
+            timers[timerIndex] = timer
+            timers[timerIndex].duration = timer.defaultDuration
+            saveTimersToAppStorage()
+        }
+    }
+    
     
     func playEndSounAndVibrate() {
         guard let url = Bundle.main.url(forResource: "timerEnd", withExtension: "mp3") else {
@@ -107,4 +144,3 @@ final class TimerViewModel: ObservableObject {
         }
     }
 }
-

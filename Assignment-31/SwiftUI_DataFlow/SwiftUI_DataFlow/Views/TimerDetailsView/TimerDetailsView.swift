@@ -12,7 +12,7 @@ struct TimerDetailsView: View {
     private let timers = [1,2,3,4,5,6,7,8,9,10]
     var timer: TimerModel
     var body: some View {
-        VStack{
+        VStack (spacing: 12){
             ZStack {
                 HStack {
                     Button(action: {
@@ -31,20 +31,31 @@ struct TimerDetailsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 80)
             .background(Color.mineShaft)
-            VStack (spacing: 22) {
-                Image("stopwatch")
-                Text("ხანგრძლივობა")
-                    .foregroundStyle(.white)
-                    .font(.system(size: 18, weight: .medium))
-                Text(timer.formatedTime(from: timer.defaultDuration))
-                    .foregroundStyle(.azure)
-                    .font(.system(size: 38, weight: .bold))
+            
+            GeometryReader { geometry in
+                let isSmallDevice = geometry.size.width < 376
+                
+                VStack(spacing: isSmallDevice ? 16 : 22) {
+                    Image("stopwatch")
+                    Text("ხანგრძლივობა")
+                        .foregroundStyle(.white)
+                        .font(.system(size: isSmallDevice ? 16 : 18, weight: .medium))
+                    Text(timer.formatedTime(from: timer.defaultDuration))
+                        .foregroundStyle(.azure)
+                        .font(.system(size: isSmallDevice ? 32 : 38, weight: .bold))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(EdgeInsets(
+                    top: isSmallDevice ? 45 : 65,
+                    leading: 20,
+                    bottom: isSmallDevice ? 55 : 85,
+                    trailing: 20
+                ))
+                .background(.mineShaft)
+                .cornerRadius(16)
+                .padding(.horizontal, 15)
             }
-            .frame(maxWidth: .infinity)
-            .padding(EdgeInsets(top: 65, leading: 20, bottom: 85, trailing: 20))
-            .background(.mineShaft)
-            .cornerRadius(16)
-            .padding(.horizontal, 15)
+            
             VStack (spacing: 17) {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("აქტივობის ისტორია")
@@ -66,22 +77,34 @@ struct TimerDetailsView: View {
                             .font(.system(size: 14, weight: .medium))
                     }
                     .padding(.trailing, 26)
-                    ScrollView (showsIndicators: false) {
-                        LazyVStack (spacing: 12){
-                            ForEach(timers, id: \.self) { timer in
+                    ScrollView(showsIndicators: false) {
+                        LazyVStack(spacing: 12) {
+                            ForEach(timer.history, id: \.self) { historyEntry in
                                 HStack {
-                                    Text("12 დეკ 2024")
+                                    let dateString = historyEntry["date"] ?? ""
+                                    Text(dateString)
                                         .foregroundStyle(.white)
                                         .font(.system(size: 14, weight: .medium))
+                                    
                                     Spacer()
-                                    Text("01:01:00")
-                                        .foregroundStyle(.white)
-                                        .font(.system(size: 14, weight: .medium))
+                                    
+                                    if let timeUsedString = historyEntry["timeUsed"],
+                                       let timeUsed = Int(timeUsedString) {
+                                        let formattedTime = timer.formatedTime(from: TimeInterval(timeUsed))
+                                        Text(formattedTime)
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 14, weight: .medium))
+                                    } else {
+                                        Text("00:00:00")
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 14, weight: .medium))
+                                    }
                                 }
                             }
                         }
                         .padding(.leading, 5)
                     }
+                    
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 20)

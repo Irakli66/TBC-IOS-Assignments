@@ -72,8 +72,11 @@ struct TimerView: View {
     }
     
     private func addTimer() {
-        if hours.isEmpty && minutes.isEmpty && seconds.isEmpty {
-            alertMessage = "ყველა ველი ცარიელია. გთხოვთ შეავსოთ ერთი ველი მაინც"
+        if timerName.isEmpty {
+            alertMessage = "ტაიმერის სახელი ცარიელია. გთხოვთ შეავსოთ"
+            showAlert = true
+        } else if hours.isEmpty && minutes.isEmpty && seconds.isEmpty {
+            alertMessage = "დროის ყველა ველი ცარიელია. გთხოვთ შეავსოთ ერთი ველი მაინც"
             showAlert = true
         } else {
             viewModel.addTimer(name: timerName, hours: hours, minutes: minutes, seconds: seconds)
@@ -82,6 +85,7 @@ struct TimerView: View {
             minutes = ""
             seconds = ""
         }
+        
     }
 }
 struct TimerCard: View {
@@ -92,12 +96,12 @@ struct TimerCard: View {
             if viewModel.timers.isEmpty {
                 VStack {
                     Spacer()
-                    Text("ტაიმერები არ გაქვს, დაამატე...")
+                    Text("ტაიმერები არ გაქვს, დაამატე")
                         .font(.system(size: 20, weight: .medium))
                         .foregroundStyle(.gray)
                     Spacer()
                 }
-                .frame(maxWidth: .infinity, maxHeight: 200)
+                .frame(maxWidth: .infinity, minHeight: 400)
             } else {
                 LazyVStack(spacing: 15) {
                     ForEach(viewModel.timers.reversed(), id: \.self.id) { timer in
