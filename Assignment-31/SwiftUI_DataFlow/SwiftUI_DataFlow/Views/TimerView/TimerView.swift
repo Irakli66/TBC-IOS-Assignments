@@ -18,55 +18,57 @@ struct TimerView: View {
     @State private var showAlert: Bool = false
     
     var body: some View {
-        VStack {
-            ZStack {
-                Color.clear
-                Text("ტაიმერები")
-                    .font(.system(size: 26, weight: .bold))
-                    .foregroundStyle(Color.white)
-                    .padding(.leading, 20)
-                    .padding(.vertical, 30)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .frame(maxWidth: .infinity, maxHeight: 80)
-            .background(Color.mineShaft)
-            
-            TimerCard()
-            
-            VStack(spacing: 12) {
-                TextField("", text: $timerName, prompt: Text("ტაიმერის სახელი...").foregroundStyle(.boulder))
-                    .textFieldModifier(alignment: .leading)
-                HStack {
-                    TextField("", text: $hours, prompt: Text("სთ").foregroundStyle(.boulder))
-                        .textFieldModifier(alignment: .center)
-                    TextField("", text: $minutes, prompt: Text("წთ").foregroundStyle(.boulder))
-                        .textFieldModifier(alignment: .center)
-                    TextField("", text: $seconds, prompt: Text("წმ").foregroundStyle(.boulder))
-                        .textFieldModifier(alignment: .center)
+        NavigationStack {
+            VStack {
+                ZStack {
+                    Color.clear
+                    Text("ტაიმერები")
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(Color.white)
+                        .padding(.leading, 20)
+                        .padding(.vertical, 30)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxWidth: .infinity, maxHeight: 80)
+                .background(Color.mineShaft)
+                
+                TimerCard()
+                
+                VStack(spacing: 12) {
+                    TextField("", text: $timerName, prompt: Text("ტაიმერის სახელი...").foregroundStyle(.boulder))
+                        .textFieldModifier(alignment: .leading)
+                    HStack {
+                        TextField("", text: $hours, prompt: Text("სთ").foregroundStyle(.boulder))
+                            .textFieldModifier(alignment: .center)
+                        TextField("", text: $minutes, prompt: Text("წთ").foregroundStyle(.boulder))
+                            .textFieldModifier(alignment: .center)
+                        TextField("", text: $seconds, prompt: Text("წმ").foregroundStyle(.boulder))
+                            .textFieldModifier(alignment: .center)
+                        
+                    }
+                    Button("დამატება"){
+                        addTimer()
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 50)
+                    .foregroundStyle(.white)
+                    .background(.azure)
+                    .cornerRadius(8)
+                    .alert("Invalid Input", isPresented: $showAlert) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text(alertMessage)
+                    }
                     
                 }
-                Button("დამატება"){
-                    addTimer()
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 50)
-                .foregroundStyle(.white)
-                .background(.azure)
-                .cornerRadius(8)
-                .alert("Invalid Input", isPresented: $showAlert) {
-                    Button("OK", role: .cancel) { }
-                } message: {
-                    Text(alertMessage)
-                }
-                
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(.mineShaft)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .background(.mineShaft)
+            .environmentObject(viewModel)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(Color.codGray)
         }
-        .environmentObject(viewModel)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(Color.codGray)
     }
     
     private func addTimer() {
@@ -99,46 +101,48 @@ struct TimerCard: View {
             } else {
                 LazyVStack(spacing: 15) {
                     ForEach(viewModel.timers.reversed(), id: \.self.id) { timer in
-                        VStack(spacing: 15) {
-                            HStack {
-                                Text(timer.name)
-                                    .foregroundStyle(.white)
-                                Spacer()
-                                Button(action: {
-                                    viewModel.removeTimer(with: timer.id)
-                                }) {
-                                    Image(systemName: "trash")
-                                        .foregroundStyle(.redOrange)
+                        NavigationLink(destination: TimerDetailsView(timer: timer)) {
+                            VStack(spacing: 15) {
+                                HStack {
+                                    Text(timer.name)
+                                        .foregroundStyle(.white)
+                                    Spacer()
+                                    Button(action: {
+                                        viewModel.removeTimer(with: timer.id)
+                                    }) {
+                                        Image(systemName: "trash")
+                                            .foregroundStyle(.redOrange)
+                                    }
+                                }
+                                .padding(.horizontal, 20)
+                                Text(timer.formatedTime(from: timer.duration))
+                                    .font(.system(size: 28, weight: .bold))
+                                    .foregroundStyle(.azure)
+                                HStack {
+                                    if !timer.isRunning {
+                                        Button("დაწყება") {
+                                            viewModel.startTimer(with: timer)
+                                        }
+                                        .buttonModifier(backgroundColor: .emerald)
+                                    } else {
+                                        Button("პაუზა") {
+                                            viewModel.pauseTimer(with: timer)
+                                        }
+                                        .buttonModifier(backgroundColor: .pizazz)
+                                    }
+                                    
+                                    Button("გადატვირთვა") {
+                                        viewModel.resetTimer(with: timer)
+                                    }
+                                    .buttonModifier(backgroundColor: .redOrange)
                                 }
                             }
-                            .padding(.horizontal, 20)
-                            Text(timer.formatedTime(from: timer.duration))
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundStyle(.azure)
-                            HStack {
-                                if !timer.isRunning {
-                                    Button("დაწყება") {
-                                        viewModel.startTimer(with: timer)
-                                    }
-                                    .buttonModifier(backgroundColor: .emerald)
-                                } else {
-                                    Button("პაუზა") {
-                                        viewModel.pauseTimer(with: timer)
-                                    }
-                                    .buttonModifier(backgroundColor: .pizazz)
-                                }
-                                
-                                Button("გადატვირთვა") {
-                                    viewModel.resetTimer(with: timer)
-                                }
-                                .buttonModifier(backgroundColor: .redOrange)
-                            }
+                            .padding(.vertical, 20)
+                            .frame(maxWidth: .infinity)
+                            .background(.mineShaft)
+                            .cornerRadius(16)
+                            .padding(.horizontal, 15)
                         }
-                        .padding(.vertical, 20)
-                        .frame(maxWidth: .infinity)
-                        .background(.mineShaft)
-                        .cornerRadius(16)
-                        .padding(.horizontal, 15)
                     }
                 }
             }
