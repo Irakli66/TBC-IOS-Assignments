@@ -11,6 +11,7 @@ import AudioToolbox
 
 final class TimerViewModel: ObservableObject {
     @Published var timers: [TimerModel] = []
+    @Published var QuickTimers: [TimerModel] = [TimerModel(name: "ჩაის დაყენება", duration: 180, defaultDuration: 180), TimerModel(name: "HIIT ვარჯიში", duration: 420, defaultDuration: 420), TimerModel(name: "კვერცხის მოხარშვა", duration: 600, defaultDuration: 600), TimerModel(name: "შესვენება", duration: 900, defaultDuration: 900), TimerModel(name: "ყავის პაუზა", duration: 1200, defaultDuration: 1200), TimerModel(name: "პომოდორო", duration: 1500, defaultDuration: 1500), TimerModel(name: "მედიტაცია", duration: 1800, defaultDuration: 1800), TimerModel(name: "ვარჯიში", duration: 2700, defaultDuration: 2700), TimerModel(name: "სამუშაო სესია", duration: 3600, defaultDuration: 3600)]
     @AppStorage("Timers") private var storedTimersData: Data?
     
     private var timerCancellables: [UUID: AnyCancellable] = [:]
@@ -32,6 +33,11 @@ final class TimerViewModel: ObservableObject {
         }
         
         let timer = TimerModel(name: name, duration: TimeInterval(totalInterval), defaultDuration: TimeInterval(totalInterval))
+        timers.append(timer)
+        saveTimersToAppStorage()
+    }
+    
+    func addQuickTimer(timer: TimerModel) {
         timers.append(timer)
         saveTimersToAppStorage()
     }

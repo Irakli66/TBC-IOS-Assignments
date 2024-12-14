@@ -15,13 +15,20 @@ struct TimerModel: Codable {
     var startDate: Date?
     var history: [[String: String]] = []
     
-    func formatedTime(from seconds: TimeInterval) -> String {
+    func formatedTime(from seconds: TimeInterval, isQuickTimer: Bool = false) -> String {
         let totalSeconds = Int(seconds)
         let hours = totalSeconds / 3600
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
+        var formattedTime: String = ""
         
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        if hours > 0 || !isQuickTimer {
+            formattedTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            formattedTime = String(format: "%02d:%02d", minutes, seconds)
+        }
+        
+        return formattedTime
     }
 }
 

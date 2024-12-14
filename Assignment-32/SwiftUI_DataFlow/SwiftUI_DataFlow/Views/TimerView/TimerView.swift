@@ -16,20 +16,28 @@ struct TimerView: View {
     @State private var minutes: String = ""
     @State private var seconds: String = ""
     @State private var showAlert: Bool = false
+    @State private var isSheetPresented = false
     
     var body: some View {
         NavigationStack {
             VStack {
-                ZStack {
-                    Color.clear
+                HStack {
                     Text("ტაიმერები")
                         .font(.system(size: 26, weight: .bold))
                         .foregroundStyle(Color.white)
-                        .padding(.leading, 20)
-                        .padding(.vertical, 30)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
+                    
+                    Button(action: {
+                        isSheetPresented.toggle()
+                    }) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundStyle(.white)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: 80)
+                .padding(.horizontal, 20)
                 .background(Color.mineShaft)
                 
                 TimerCard()
@@ -65,9 +73,23 @@ struct TimerView: View {
                 .padding(.vertical, 12)
                 .background(.mineShaft)
             }
-            .environmentObject(viewModel)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(Color.codGray)
+            .overlay(
+                ZStack {
+                    if isSheetPresented {
+                        Color.overlaycolor.opacity(0.7)
+                            .blur(radius: 50)
+                            .ignoresSafeArea()
+                    }
+                }
+            )
+            .sheet(isPresented: $isSheetPresented) {
+                QuickTimersView()
+                    .presentationDetents([.height(410)])
+                    .background(.codGray)
+            }
+            .environmentObject(viewModel)
         }
     }
     

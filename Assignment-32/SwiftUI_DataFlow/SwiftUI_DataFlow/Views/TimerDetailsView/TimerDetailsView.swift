@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TimerDetailsView: View {
     @Environment(\.dismiss) private var dismiss
-    private let timers = [1,2,3,4,5,6,7,8,9,10]
     var timer: TimerModel
     var body: some View {
         VStack (spacing: 12){
@@ -79,7 +78,7 @@ struct TimerDetailsView: View {
                     .padding(.trailing, 26)
                     ScrollView(showsIndicators: false) {
                         LazyVStack(spacing: 12) {
-                            ForEach(timer.history, id: \.self) { historyEntry in
+                            ForEach(timer.history.reversed(), id: \.self) { historyEntry in
                                 HStack {
                                     let dateString = historyEntry["date"] ?? ""
                                     Text(dateString)
