@@ -44,3 +44,9 @@ struct HistoryEntry: Codable {
         var duration: TimeInterval
     }
 }
+
+struct SessionStatistics {
+    let sessionCount: Int
+    let totalLength: TimeInterval
+    let averageLength: TimeInterval
+}

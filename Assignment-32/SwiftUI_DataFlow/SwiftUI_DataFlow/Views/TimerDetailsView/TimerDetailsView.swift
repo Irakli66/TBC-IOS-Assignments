@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TimerDetailsView: View {
+    @StateObject private var viewModel = TimerDetailsViewModel()
     @Environment(\.dismiss) private var dismiss
     var timer: TimerModel
     
@@ -57,11 +58,13 @@ struct TimerDetailsView: View {
             }
             .frame(maxHeight: 220)
             
+            
             VStack (spacing: 12) {
+                let statistics = viewModel.calculateTodaysStatistics(for: timer)
                 HStack {
                     Section(header: Text("დღევანდელი სესიები").sectionHeaderModifier()) {
                         Spacer()
-                        Text("5 სესია")
+                        Text("\(statistics.sessionCount) სესია")
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
                     }
@@ -73,7 +76,7 @@ struct TimerDetailsView: View {
                 HStack {
                     Section(header: Text("საშუალო ხანგრძლივობა").sectionHeaderModifier()) {
                         Spacer()
-                        Text("45 წუთი")
+                        Text("\(timer.formatedTime(from: statistics.averageLength))")
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
                     }
@@ -85,7 +88,7 @@ struct TimerDetailsView: View {
                 HStack {
                     Section(header: Text("ჯამური დრო").sectionHeaderModifier()) {
                         Spacer()
-                        Text("3 სთ 45 წთ")
+                        Text("\(timer.formatedTime(from: statistics.totalLength))")
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
                     }
@@ -156,14 +159,14 @@ struct TimerDetailsView: View {
         defaultDuration: 2700,
         history: [
             HistoryEntry(
-                date: "15 Dec 2024",
+                date: "15 დეკ 2024",
                 sessions: [
                     HistoryEntry.Session(startTime: "10:00:00", endTime: "10:30:00", duration: 1800),
                     HistoryEntry.Session(startTime: "12:00:00", endTime: "12:15:00", duration: 900)
                 ]
             ),
             HistoryEntry(
-                date: "14 Dec 2024",
+                date: "14 დეკ 2024",
                 sessions: [
                     HistoryEntry.Session(startTime: "08:30:00", endTime: "08:50:00", duration: 1200)
                 ]
