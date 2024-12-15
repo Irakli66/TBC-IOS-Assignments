@@ -72,7 +72,7 @@ struct TimerDetailsView: View {
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     List {
-                        ForEach(timer.history, id: \.id) { historyEntry in
+                        ForEach(timer.history.reversed(), id: \.id) { historyEntry in
                             Section(header: Text(historyEntry.date).sectionHeaderModifier()) {
                                 ForEach(historyEntry.sessions.reversed(), id: \.id) { session in
                                     HStack {
