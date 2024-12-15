@@ -76,7 +76,7 @@ struct TimerDetailsView: View {
                 HStack {
                     Section(header: Text("საშუალო ხანგრძლივობა").sectionHeaderModifier()) {
                         Spacer()
-                        Text("\(timer.formatedTime(from: statistics.averageLength))")
+                        Text("\(timer.formatTimeForStats(from: statistics.averageLength))")
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
                     }
@@ -88,7 +88,7 @@ struct TimerDetailsView: View {
                 HStack {
                     Section(header: Text("ჯამური დრო").sectionHeaderModifier()) {
                         Spacer()
-                        Text("\(timer.formatedTime(from: statistics.totalLength))")
+                        Text("\(timer.formatTimeForStats(from: statistics.totalLength))")
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
                     }

@@ -30,6 +30,24 @@ struct TimerModel: Codable {
         
         return formattedTime
     }
+    
+    func formatTimeForStats(from seconds: TimeInterval) -> String {
+        let totalSeconds = Int(seconds)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        var formattedTime: String = ""
+        
+        if hours > 0 {
+            formattedTime = String(format: "%d სთ %d წთ %d წმ", hours, minutes, seconds)
+        } else if hours == 0 && minutes == 0 {
+            formattedTime = String(format: "%d წმ", seconds)
+        } else {
+            formattedTime = String(format: "%d წთ %d წმ", minutes, seconds)
+        }
+        
+        return formattedTime
+    }
 }
 
 struct HistoryEntry: Codable {
