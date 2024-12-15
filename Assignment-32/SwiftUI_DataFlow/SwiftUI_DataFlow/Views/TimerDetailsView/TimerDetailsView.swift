@@ -57,7 +57,7 @@ struct TimerDetailsView: View {
                 .padding(.horizontal, 15)
             }
             .frame(maxHeight: 220)
-        
+            
             StatisticsView(timer: timer)
             
             VStack (spacing: 5) {
@@ -85,14 +85,12 @@ struct TimerDetailsView: View {
                                                 .font(.system(size: 14))
                                                 .foregroundColor(.white)
                                         }
-                                        Rectangle()
-                                            .fill(Color.white.opacity(0.3))
-                                            .frame(height: 0.5)
                                     }
                                 }
                             }
                             .listRowInsets(EdgeInsets())
-                            .listSectionSpacing(0)
+                            .listRowSeparatorTint(.boulder)
+                            .listSectionSpacing(10)
                             .listRowBackground(Color.clear)
                         }
                     }
