@@ -75,16 +75,14 @@ struct TimerDetailsView: View {
                         ForEach(timer.history, id: \.id) { historyEntry in
                             Section(header: Text(historyEntry.date).sectionHeaderModifier()) {
                                 ForEach(historyEntry.sessions.reversed(), id: \.id) { session in
-                                    VStack(spacing: 4) {
-                                        HStack {
-                                            Text("\(session.startTime)")
-                                                .font(.system(size: 14))
-                                                .foregroundColor(.white)
-                                            Spacer()
-                                            Text(timer.formatedTime(from: session.duration))
-                                                .font(.system(size: 14))
-                                                .foregroundColor(.white)
-                                        }
+                                    HStack {
+                                        Text("\(session.startTime)")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.white)
+                                        Spacer()
+                                        Text(timer.formatedTime(from: session.duration))
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.white)
                                     }
                                 }
                             }
