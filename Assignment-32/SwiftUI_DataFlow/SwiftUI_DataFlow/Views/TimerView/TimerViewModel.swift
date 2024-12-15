@@ -11,7 +11,28 @@ import AudioToolbox
 
 final class TimerViewModel: ObservableObject {
     @Published var timers: [TimerModel] = []
-    @Published var QuickTimers: [TimerModel] = [TimerModel(name: "ჩაის დაყენება", duration: 180, defaultDuration: 180), TimerModel(name: "HIIT ვარჯიში", duration: 420, defaultDuration: 420), TimerModel(name: "კვერცხის მოხარშვა", duration: 600, defaultDuration: 600), TimerModel(name: "შესვენება", duration: 900, defaultDuration: 900), TimerModel(name: "ყავის პაუზა", duration: 1200, defaultDuration: 1200), TimerModel(name: "პომოდორო", duration: 1500, defaultDuration: 1500), TimerModel(name: "მედიტაცია", duration: 1800, defaultDuration: 1800), TimerModel(name: "ვარჯიში", duration: 2700, defaultDuration: 2700), TimerModel(name: "სამუშაო სესია", duration: 3600, defaultDuration: 3600)]
+    @Published var QuickTimers: [TimerModel] = [
+        TimerModel(name: "ჩაის დაყენება", duration: 180, defaultDuration: 180),
+        TimerModel(name: "HIIT ვარჯიში", duration: 420, defaultDuration: 420),
+        TimerModel(name: "კვერცხის მოხარშვა", duration: 600, defaultDuration: 600),
+        TimerModel(name: "შესვენება", duration: 900, defaultDuration: 900),
+        TimerModel(name: "ყავის პაუზა", duration: 1200, defaultDuration: 1200),
+        TimerModel(name: "პომოდორო", duration: 1500, defaultDuration: 1500),
+        TimerModel(name: "მედიტაცია", duration: 1800, defaultDuration: 1800),
+        TimerModel(name: "ვარჯიში", duration: 2700, defaultDuration: 2700),
+        TimerModel(name: "სამუშაო სესია", duration: 3600, defaultDuration: 3600),
+        TimerModel(name: "დასუფთავება", duration: 600, defaultDuration: 600),
+        TimerModel(name: "წაკითხვა", duration: 1200, defaultDuration: 1200),
+        TimerModel(name: "ვარჯიში 2", duration: 1800, defaultDuration: 1800),
+        TimerModel(name: "დაჭერილობა", duration: 2400, defaultDuration: 2400),
+        TimerModel(name: "მუშაობა პროექტზე", duration: 3600, defaultDuration: 3600),
+        TimerModel(name: "დაძინება", duration: 7200, defaultDuration: 7200),
+        TimerModel(name: "დასვენება 2", duration: 1500, defaultDuration: 1500),
+        TimerModel(name: "ჰობი", duration: 900, defaultDuration: 900),
+        TimerModel(name: "საუზმე", duration: 1800, defaultDuration: 1800),
+        TimerModel(name: "ფილმების ყურება", duration: 2400, defaultDuration: 2400)
+    ]
+
     @AppStorage("Timers") private var storedTimersData: Data?
     
     private var timerCancellables: [UUID: AnyCancellable] = [:]
