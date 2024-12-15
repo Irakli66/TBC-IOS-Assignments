@@ -32,6 +32,14 @@ struct TextFieldModifier: ViewModifier {
     }
 }
 
+struct SectionHeaderModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 15, weight: .bold))
+            .foregroundStyle(Color.boulder)
+    }
+}
+
 extension View {
     public func buttonModifier(backgroundColor: Color) -> some View {
         self.modifier(ButtonModifier(backgroundColor: backgroundColor))
@@ -39,5 +47,9 @@ extension View {
     
     public func textFieldModifier(alignment: TextAlignment) -> some View {
         self.modifier(TextFieldModifier(alignment: alignment))
+    }
+    
+    public func sectionHeaderModifier() -> some View {
+        self.modifier(SectionHeaderModifier())
     }
 }

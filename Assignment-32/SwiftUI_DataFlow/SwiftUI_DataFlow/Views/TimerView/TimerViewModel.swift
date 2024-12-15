@@ -92,23 +92,30 @@ final class TimerViewModel: ObservableObject {
     
     private func updateHistory(for timer: inout TimerModel) {
         guard let startDate = timer.startDate else { return }
-        let elapsed = Date().timeIntervalSince(startDate)
+        let endTime = Date()
+        let elapsed = endTime.timeIntervalSince(startDate)
         
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ka_GE")
         dateFormatter.dateFormat = "dd MMM yyyy"
         let today = dateFormatter.string(from: Date())
         
-        if let index = timer.history.firstIndex(where: { $0["date"] == today }) {
-            if let previousTimeUsed = Int(timer.history[index]["timeUsed"] ?? "0") {
-                let updatedTimeUsed = previousTimeUsed + Int(elapsed) - 1
-                timer.history[index]["timeUsed"] = "\(updatedTimeUsed)"
-            }
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "ka_GE")
+        timeFormatter.dateFormat = "HH:mm"
+        let startTimeString = timeFormatter.string(from: startDate)
+        let endTimeString = timeFormatter.string(from: endTime)
+        
+        let session = HistoryEntry.Session(
+            startTime: startTimeString,
+            endTime: endTimeString,
+            duration: elapsed - 1
+        )
+        
+        if let index = timer.history.firstIndex(where: { $0.date == today }) {
+            timer.history[index].sessions.append(session)
         } else {
-            let newEntry: [String: String] = [
-                "date": today,
-                "timeUsed": "\(Int(elapsed - 1))"
-            ]
+            let newEntry = HistoryEntry(date: today, sessions: [session])
             timer.history.append(newEntry)
         }
         
@@ -119,7 +126,6 @@ final class TimerViewModel: ObservableObject {
             saveTimersToAppStorage()
         }
     }
-    
     
     func playEndSounAndVibrate() {
         guard let url = Bundle.main.url(forResource: "timerEnd", withExtension: "mp3") else {

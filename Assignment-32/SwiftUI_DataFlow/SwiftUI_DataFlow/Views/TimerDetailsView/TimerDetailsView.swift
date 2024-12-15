@@ -10,6 +10,7 @@ import SwiftUI
 struct TimerDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     var timer: TimerModel
+    
     var body: some View {
         VStack (spacing: 12){
             ZStack {
@@ -45,75 +46,103 @@ struct TimerDetailsView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(
-                    top: isSmallDevice ? 45 : 65,
+                    top: isSmallDevice ? 10 : 20,
                     leading: 20,
-                    bottom: isSmallDevice ? 55 : 85,
+                    bottom: isSmallDevice ? 10 : 20,
                     trailing: 20
                 ))
                 .background(.mineShaft)
                 .cornerRadius(16)
                 .padding(.horizontal, 15)
             }
+            .frame(maxHeight: 220)
             
-            VStack (spacing: 17) {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("აქტივობის ისტორია")
-                        .foregroundStyle(.white)
-                        .font(.system(size: 18, weight: .medium))
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(height: 1)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                VStack {
-                    HStack {
-                        Text("თარიღი")
-                            .foregroundStyle(.white)
-                            .font(.system(size: 14, weight: .medium))
+            VStack (spacing: 12) {
+                HStack {
+                    Section(header: Text("დღევანდელი სესიები").sectionHeaderModifier()) {
                         Spacer()
-                        Text("დრო")
+                        Text("5 სესია")
+                            .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(.white)
-                            .font(.system(size: 14, weight: .medium))
                     }
-                    .padding(.trailing, 26)
-                    ScrollView(showsIndicators: false) {
-                        LazyVStack(spacing: 12) {
-                            ForEach(timer.history.reversed(), id: \.self) { historyEntry in
-                                HStack {
-                                    let dateString = historyEntry["date"] ?? ""
-                                    Text(dateString)
-                                        .foregroundStyle(.white)
-                                        .font(.system(size: 14, weight: .medium))
-                                    
-                                    Spacer()
-                                    
-                                    if let timeUsedString = historyEntry["timeUsed"],
-                                       let timeUsed = Int(timeUsedString) {
-                                        let formattedTime = timer.formatedTime(from: TimeInterval(timeUsed))
-                                        Text(formattedTime)
-                                            .foregroundStyle(.white)
-                                            .font(.system(size: 14, weight: .medium))
-                                    } else {
-                                        Text("00:00:00")
-                                            .foregroundStyle(.white)
-                                            .font(.system(size: 14, weight: .medium))
+                }
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: 0.5)
+                
+                HStack {
+                    Section(header: Text("საშუალო ხანგრძლივობა").sectionHeaderModifier()) {
+                        Spacer()
+                        Text("45 წუთი")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(.white)
+                    }
+                }
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: 0.5)
+                
+                HStack {
+                    Section(header: Text("ჯამური დრო").sectionHeaderModifier()) {
+                        Spacer()
+                        Text("3 სთ 45 წთ")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(.white)
+                    }
+                }
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: 0.5)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 20)
+            .background(.mineShaft)
+            .cornerRadius(16)
+            .padding(.horizontal, 15)
+            
+            VStack (spacing: 5) {
+                if timer.history.isEmpty {
+                    Spacer()
+                    Text("ტაიმერის ისტორია ცარიელია")
+                        .foregroundStyle(.boulder)
+                    Spacer()
+                } else {
+                    Text("აქტივობის ისტორია")
+                        .font(.system(size: 18))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    List {
+                        ForEach(timer.history, id: \.id) { historyEntry in
+                            Section(header: Text(historyEntry.date).sectionHeaderModifier()) {
+                                ForEach(historyEntry.sessions.reversed(), id: \.id) { session in
+                                    VStack(spacing: 4) {
+                                        HStack {
+                                            Text("\(session.startTime)")
+                                                .font(.system(size: 14))
+                                                .foregroundColor(.white)
+                                            Spacer()
+                                            Text(timer.formatedTime(from: session.duration))
+                                                .font(.system(size: 14))
+                                                .foregroundColor(.white)
+                                        }
+                                        Rectangle()
+                                            .fill(Color.white.opacity(0.3))
+                                            .frame(height: 0.5)
                                     }
                                 }
                             }
+                            .listRowInsets(EdgeInsets())
+                            .listSectionSpacing(0)
+                            .listRowBackground(Color.clear)
                         }
-                        .padding(.leading, 5)
                     }
-                    
+                    .listStyle(.grouped)
+                    .scrollIndicators(.hidden)
+                    .scrollContentBackground(.hidden)
                 }
-                .padding(.leading, 12)
-                .padding(.trailing, 20)
             }
-            .padding(.top, 31)
+            .padding(.top, 15)
             .padding(.horizontal, 15)
-            .background(.mineShaft)
-            .cornerRadius(12)
-            .padding(.horizontal, 15)
-            
         }
         .background(.codGray)
         .navigationBarBackButtonHidden()
@@ -121,5 +150,24 @@ struct TimerDetailsView: View {
 }
 
 #Preview {
-    TimerDetailsView(timer: TimerModel(name: "ვარჯიში", duration: 2700, defaultDuration: 2700))
+    TimerDetailsView(timer: TimerModel(
+        name: "ვარჯიში",
+        duration: 2700,
+        defaultDuration: 2700,
+        history: [
+            HistoryEntry(
+                date: "15 Dec 2024",
+                sessions: [
+                    HistoryEntry.Session(startTime: "10:00:00", endTime: "10:30:00", duration: 1800),
+                    HistoryEntry.Session(startTime: "12:00:00", endTime: "12:15:00", duration: 900)
+                ]
+            ),
+            HistoryEntry(
+                date: "14 Dec 2024",
+                sessions: [
+                    HistoryEntry.Session(startTime: "08:30:00", endTime: "08:50:00", duration: 1200)
+                ]
+            )
+        ]
+    ))
 }

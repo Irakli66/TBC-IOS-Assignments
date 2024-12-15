@@ -13,7 +13,7 @@ struct TimerModel: Codable {
     var defaultDuration: TimeInterval
     var isRunning: Bool = false
     var startDate: Date?
-    var history: [[String: String]] = []
+    var history: [HistoryEntry] = []
     
     func formatedTime(from seconds: TimeInterval, isQuickTimer: Bool = false) -> String {
         let totalSeconds = Int(seconds)
@@ -32,3 +32,15 @@ struct TimerModel: Codable {
     }
 }
 
+struct HistoryEntry: Codable {
+    var id = UUID()
+    var date: String
+    var sessions: [Session]
+    
+    struct Session: Codable {
+        var id = UUID()
+        var startTime: String
+        var endTime: String
+        var duration: TimeInterval
+    }
+}
