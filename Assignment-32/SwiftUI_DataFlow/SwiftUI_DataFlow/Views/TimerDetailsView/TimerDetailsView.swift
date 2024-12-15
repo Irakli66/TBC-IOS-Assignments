@@ -57,51 +57,8 @@ struct TimerDetailsView: View {
                 .padding(.horizontal, 15)
             }
             .frame(maxHeight: 220)
-            
-            
-            VStack (spacing: 12) {
-                let statistics = viewModel.calculateTodaysStatistics(for: timer)
-                HStack {
-                    Section(header: Text("დღევანდელი სესიები").sectionHeaderModifier()) {
-                        Spacer()
-                        Text("\(statistics.sessionCount) სესია")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(.white)
-                    }
-                }
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: 0.5)
-                
-                HStack {
-                    Section(header: Text("საშუალო ხანგრძლივობა").sectionHeaderModifier()) {
-                        Spacer()
-                        Text("\(timer.formatTimeForStats(from: statistics.averageLength))")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(.white)
-                    }
-                }
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: 0.5)
-                
-                HStack {
-                    Section(header: Text("ჯამური დრო").sectionHeaderModifier()) {
-                        Spacer()
-                        Text("\(timer.formatTimeForStats(from: statistics.totalLength))")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(.white)
-                    }
-                }
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: 0.5)
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 20)
-            .background(.mineShaft)
-            .cornerRadius(16)
-            .padding(.horizontal, 15)
+        
+            StatisticsView(timer: timer)
             
             VStack (spacing: 5) {
                 if timer.history.isEmpty {
@@ -147,6 +104,7 @@ struct TimerDetailsView: View {
             .padding(.top, 15)
             .padding(.horizontal, 15)
         }
+        .environmentObject(viewModel)
         .background(.codGray)
         .navigationBarBackButtonHidden()
     }
