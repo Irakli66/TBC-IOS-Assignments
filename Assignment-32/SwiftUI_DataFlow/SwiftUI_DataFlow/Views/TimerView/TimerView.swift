@@ -86,7 +86,7 @@ struct TimerView: View {
             )
             .sheet(isPresented: $isSheetPresented) {
                 QuickTimersView()
-                    .presentationDetents([.height(410)])
+                    .presentationDetents([.height(410), .medium, .height(600)])
                     .background(.codGray)
             }
             .environmentObject(viewModel)
