@@ -42,7 +42,11 @@ struct MainTabView: View {
                         if index == 2 {
                             rotateManager.doRotate()
                         }
-                        selectedTab = index
+                        if index == 1 {
+                            selectedTab = 0
+                        } else {
+                            selectedTab = index
+                        }
                     }
                     .onLongPressGesture(minimumDuration: 5) {
                         if index == 1 {
@@ -75,8 +79,6 @@ struct TabContentView: View {
     var body: some View {
         switch selectedTab {
         case 0:
-            WheelView(wheelManager: wheelManager)
-        case 1:
             WheelView(wheelManager: wheelManager)
         case 2:
             RotateView(rotateManager: rotateManager)

@@ -10,19 +10,30 @@ import SwiftUI
 struct WheelView: View {
     @ObservedObject var wheelManager: WheelManager
     
-    let colors: [Color] = [
-        .red, .blue, .green, .yellow, .purple,
-        .orange, .pink, .brown, .gray, .cyan,
-        .indigo, .teal, .mint,
-    ]
     @State var spin: Double = 0
-    @State var count: Int = 13
+    @State var count: Int = 0
     var body: some View {
         VStack {
+            Button("Add Segment") {
+                count += 1
+            }
+            .padding(10)
+            .background(.purple)
+            .foregroundStyle(.white)
+            .cornerRadius(12)
+            
+            if count == 0 {
+                Spacer()
+                Text("add segments to see the wheel")
+                    .textCase(.uppercase)
+                    .foregroundStyle(.white)
+                    .font(.system(size: 18, weight: .medium))
+            }
+            
             ZStack{
                 ForEach(0..<count, id: \.self) { index in
                     Pie(startAngle: .degrees(Double(index) / Double(count) * 360), endAngle: .degrees(Double(index + 1) / Double(count) * 360))
-                        .fill(wheelManager.isBackgroundClear ? .clear : colors[index % colors.count])
+                        .fill(wheelManager.isBackgroundClear ? .clear : Color.Random())
                         .stroke(.black)
                 }
             }
@@ -48,7 +59,7 @@ struct WheelView: View {
     
     func spinWheel() {
         withAnimation(.spring(response: 2, dampingFraction: 1.5)) {
-            spin += 720
+            spin += 1080
         }
     }
 }
