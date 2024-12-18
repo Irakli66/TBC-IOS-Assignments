@@ -24,10 +24,14 @@ struct WheelView: View {
             
             if count == 0 {
                 Spacer()
-                Text("add segments to see the wheel")
-                    .textCase(.uppercase)
-                    .foregroundStyle(.white)
-                    .font(.system(size: 18, weight: .medium))
+                ZStack {
+                    Circle()
+                        .fill(Color.black.opacity(0.4))
+                        .frame(width: 370, height: 370)
+                    Text("Add Segments to see the wheel")
+                        .foregroundStyle(.white)
+                        .font(.system(size: 18, weight: .bold))
+                }
             }
             
             ZStack{
