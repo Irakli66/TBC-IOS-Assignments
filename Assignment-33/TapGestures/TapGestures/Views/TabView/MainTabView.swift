@@ -9,7 +9,6 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @StateObject private var wheelManager = WheelManager()
-    @StateObject private var rotateManager = RotateManager()
     
     let tabs = [
         ("spin", "spinActive", "Spin"),
@@ -20,7 +19,7 @@ struct MainTabView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TabContentView(selectedTab: selectedTab, wheelManager: wheelManager, rotateManager: rotateManager)
+            TabContentView(selectedTab: selectedTab, wheelManager: wheelManager)
             
             HStack {
                 ForEach(0..<tabs.count, id: \.self) { index in
@@ -38,9 +37,6 @@ struct MainTabView: View {
                     .onTapGesture {
                         if index == 0 {
                             wheelManager.resetAndTriggerSpin()
-                        }
-                        if index == 2 {
-                            rotateManager.doRotate()
                         }
                         if index == 1 {
                             selectedTab = 0
@@ -74,14 +70,13 @@ struct MainTabView: View {
 struct TabContentView: View {
     let selectedTab: Int
     let wheelManager: WheelManager
-    let rotateManager: RotateManager
     
     var body: some View {
         switch selectedTab {
         case 0:
             WheelView(wheelManager: wheelManager)
         case 2:
-            RotateView(rotateManager: rotateManager)
+            RotateView()
         case 3:
             TrashView()
         default:
