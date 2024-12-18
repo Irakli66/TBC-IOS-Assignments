@@ -32,11 +32,16 @@ struct WheelView: View {
                     spinWheel()
                 }
             }
+            .onLongPressGesture(minimumDuration: 1) {
+                wheelManager.isBackgroundClear = true
+            } onPressingChanged: { _ in
+                wheelManager.isBackgroundClear = false
+            }
             Spacer()
             
         }
         .padding()
-        .background(.customGreen)
+        .background(.clear)
     }
     
     func spinWheel() {

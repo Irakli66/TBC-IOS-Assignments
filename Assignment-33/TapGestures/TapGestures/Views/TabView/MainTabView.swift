@@ -9,6 +9,7 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @StateObject private var wheelManager = WheelManager()
+    @StateObject private var rotateManager = RotateManager()
     
     let tabs = [
         ("spin", "spinActive", "Spin"),
@@ -19,7 +20,7 @@ struct MainTabView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TabContentView(selectedTab: selectedTab, wheelManager: wheelManager)
+            TabContentView(selectedTab: selectedTab, wheelManager: wheelManager, rotateManager: rotateManager)
             
             HStack {
                 ForEach(0..<tabs.count, id: \.self) { index in
@@ -38,13 +39,16 @@ struct MainTabView: View {
                         if index == 0 {
                             wheelManager.resetAndTriggerSpin()
                         }
+                        if index == 2 {
+                            rotateManager.doRotate()
+                        }
                         selectedTab = index
                     }
                     .onLongPressGesture(minimumDuration: 5) {
                         if index == 1 {
                             wheelManager.isBackgroundClear = true
                         }
-                    } onPressingChanged: { test in
+                    } onPressingChanged: { _ in
                         wheelManager.isBackgroundClear = false
                     }
                     
@@ -56,13 +60,14 @@ struct MainTabView: View {
             .padding(.bottom, 15)
         }
         .edgesIgnoringSafeArea(.bottom)
-        
+        .background(.customGreen)
     }
 }
 
 struct TabContentView: View {
     let selectedTab: Int
     let wheelManager: WheelManager
+    let rotateManager: RotateManager
     
     var body: some View {
         switch selectedTab {
@@ -71,7 +76,7 @@ struct TabContentView: View {
         case 1:
             WheelView(wheelManager: wheelManager)
         case 2:
-            RotateView()
+            RotateView(rotateManager: rotateManager)
         case 3:
             TrashView()
         default:
@@ -80,7 +85,6 @@ struct TabContentView: View {
     }
 }
 
-struct RotateView: View { var body: some View { Text("Rotate View") } }
 struct TrashView: View { var body: some View { Text("Trash View") } }
 
 #Preview {

@@ -12,15 +12,15 @@ final class WheelManager: ObservableObject {
     
     func triggerSpin() {
         makeSpin = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.makeSpin = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.makeSpin = false
         }
     }
     
     func resetAndTriggerSpin() {
         makeSpin = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.triggerSpin()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.triggerSpin()
         }
     }
 }
