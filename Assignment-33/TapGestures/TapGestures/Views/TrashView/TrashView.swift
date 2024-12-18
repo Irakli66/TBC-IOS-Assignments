@@ -5,8 +5,10 @@
 //  Created by irakli kharshiladze on 18.12.24.
 //
 import SwiftUI
+import AVFoundation
 
 struct TrashView: View {
+    @StateObject private var viewModel = TrashViewModel()
     @State private var files: [FileModel] = []
     
     var body: some View {
@@ -59,6 +61,7 @@ struct TrashView: View {
                                     if trashFrame.contains(gesture.location) {
                                         withAnimation(.easeInOut(duration: 0.5)) {
                                             files.removeAll { $0.id == file.id }
+                                            viewModel.playTrashSound()
                                         }
                                     }
                                 }
