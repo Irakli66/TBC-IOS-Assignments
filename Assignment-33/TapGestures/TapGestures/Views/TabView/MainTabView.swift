@@ -85,8 +85,6 @@ struct TabContentView: View {
     }
 }
 
-struct TrashView: View { var body: some View { Text("Trash View") } }
-
 #Preview {
     MainTabView()
 }
