@@ -51,6 +51,7 @@ struct TrashView: View {
                     VStack {
                         Text("Deleted Files")
                             .font(.headline)
+                            .foregroundStyle(.customGreen)
                         Text("\(deletedFilesCount)")
                             .font(.system(size: 72, weight: .bold))
                             .foregroundColor(.purple)
