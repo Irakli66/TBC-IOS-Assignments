@@ -10,12 +10,12 @@ import AVFoundation
 struct TrashView: View {
     @StateObject private var viewModel = TrashViewModel()
     @State private var files: [FileModel] = []
+    @State private var deletedFilesCount = 0
+    @State private var showDeletionCount = false
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.customGreen.edgesIgnoringSafeArea(.all)
-                
                 Button("Spawn File") {
                     let newFile = FileModel(position: CGPoint(
                         x: CGFloat.random(in: 50...(geometry.size.width - 50)),
@@ -36,6 +36,33 @@ struct TrashView: View {
                     .frame(width: 50, height: 50)
                     .position(x: geometry.size.width - 40,
                               y: geometry.size.height - 80)
+                    .onTapGesture {
+                        withAnimation {
+                            showDeletionCount = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                showDeletionCount = false
+                            }
+                        }
+                    }
+                
+                if showDeletionCount {
+                    VStack {
+                        Text("Deleted Files")
+                            .font(.headline)
+                        Text("\(deletedFilesCount)")
+                            .font(.system(size: 72, weight: .bold))
+                            .foregroundColor(.purple)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.9))
+                            .shadow(radius: 10)
+                    )
+                    .transition(.scale)
+                }
                 
                 ForEach($files) { $file in
                     Image("file")
@@ -60,6 +87,7 @@ struct TrashView: View {
                                     
                                     if trashFrame.contains(gesture.location) {
                                         withAnimation(.easeInOut(duration: 0.5)) {
+                                            deletedFilesCount += 1
                                             files.removeAll { $0.id == file.id }
                                             viewModel.playTrashSound()
                                         }
