@@ -47,6 +47,8 @@ struct MainTabView: View {
                     .onLongPressGesture(minimumDuration: 5) {
                         if index == 1 {
                             wheelManager.isBackgroundClear = true
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
                         }
                     } onPressingChanged: { _ in
                         wheelManager.isBackgroundClear = false

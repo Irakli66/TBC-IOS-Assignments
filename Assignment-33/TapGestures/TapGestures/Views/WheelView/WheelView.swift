@@ -34,6 +34,8 @@ struct WheelView: View {
             }
             .onLongPressGesture(minimumDuration: 1) {
                 wheelManager.isBackgroundClear = true
+                let impact = UIImpactFeedbackGenerator(style: .medium)
+                impact.impactOccurred()
             } onPressingChanged: { _ in
                 wheelManager.isBackgroundClear = false
             }
