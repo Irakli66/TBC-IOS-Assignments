@@ -56,8 +56,9 @@ struct MainTabView: View {
                 }
             }
             .frame(height: 60)
-            .background(.white)
+            .padding(.vertical, 10)
             .padding(.bottom, 15)
+            .background(.white)
         }
         .edgesIgnoringSafeArea(.bottom)
         .background(.customGreen)
