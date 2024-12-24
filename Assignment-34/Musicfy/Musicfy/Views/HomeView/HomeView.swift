@@ -66,11 +66,8 @@ struct HomeView: View {
                                             .foregroundStyle(.green)
                                     }
                                     Spacer()
-                                    Text(viewModel.formattedDuration(song.duration))
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
                                 }
-                               
+                                
                             }
                             .padding(.vertical, 15)
                             .padding(.horizontal, 10)
@@ -90,42 +87,57 @@ struct HomeView: View {
                 .scrollContentBackground(.hidden)
                 Spacer()
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 16) {
-                        Image(viewModel.selectedSong?.artCover ?? "")
-                            .resizable()
-                            .frame(width: 75, height: 75)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                        VStack(alignment: .leading) {
-                            Text(viewModel.selectedSong?.title ?? "")
-                                .font(.headline)
-                                .foregroundColor(.primary)
-                            
-                            HStack {
-                                Text(viewModel.selectedSong?.artist ?? "")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                    VStack {
+                        HStack(spacing: 16) {
+                            Image(viewModel.selectedSong?.artCover ?? "")
+                                .resizable()
+                                .frame(width: 75, height: 75)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            VStack(alignment: .leading) {
+                                Text(viewModel.selectedSong?.title ?? "")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
                                 
-                                Text("•")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                HStack {
+                                    Text(viewModel.selectedSong?.artist ?? "")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text("•")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text(viewModel.selectedSong?.album ?? "")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            Spacer()
+                            if viewModel.selectedSong?.isPlaying ?? true {
+                                Image(systemName: "pause.fill")
+                                    .onTapGesture {
+                                        viewModel.pauseSong()
+                                    }
                                 
-                                Text(viewModel.selectedSong?.album ?? "")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                            } else {
+                                Image(systemName: "play.fill")
+                                    .onTapGesture {
+                                        viewModel.playSong()
+                                    }
                             }
                         }
-                        Spacer()
-                        if viewModel.selectedSong?.isPlaying ?? true {
-                            Image(systemName: "pause.fill")
-                                .onTapGesture {
-                                    viewModel.pauseSong()
-                                }
-
-                        } else {
-                            Image(systemName: "play.fill")
-                                .onTapGesture {
-                                    viewModel.playSong()
-                                }
+                        VStack {
+                            HStack {
+                                Text(viewModel.formattedTime(viewModel.currentTime))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text("/")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text(viewModel.formattedTime(TimeInterval(viewModel.selectedSong?.duration ?? 0)))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                     .padding()
@@ -146,3 +158,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
+
+

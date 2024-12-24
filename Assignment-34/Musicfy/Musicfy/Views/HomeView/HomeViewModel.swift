@@ -10,9 +10,11 @@ import AVFoundation
 final class HomeViewModel: ObservableObject {
     @Published var songs: [SongModel] = []
     @Published var selectedSong: SongModel?
+    @Published var currentTime: TimeInterval = 0
     @AppStorage("isDarkTheme") var isDarkTheme: Bool = false
     
     private var audioPlayer: AVAudioPlayer?
+    private var timer: Timer?
     
     init() {
         loadSongs()
@@ -20,9 +22,28 @@ final class HomeViewModel: ObservableObject {
     }
     
     func selectSong(song: SongModel) {
+        stopTimer()
+        currentTime = 0
         selectedSong = song
         selectedSong?.isPlaying = true
         playSelectedSong()
+    }
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self,
+                  let player = self.audioPlayer,
+                  player.isPlaying else {
+                self?.stopTimer()
+                return
+            }
+            self.currentTime = player.currentTime
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
     
     private func loadSongs() {
@@ -62,6 +83,7 @@ final class HomeViewModel: ObservableObject {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.play()
             selectedSong.isPlaying = true
+            startTimer()
         } catch {
             print("Error playing audio: \(error.localizedDescription)")
         }
@@ -70,16 +92,18 @@ final class HomeViewModel: ObservableObject {
     func playSong() {
         audioPlayer?.play()
         selectedSong?.isPlaying = true
+        startTimer()
     }
     
     func pauseSong() {
         audioPlayer?.pause()
         selectedSong?.isPlaying = false
+        stopTimer()
     }
     
-    func formattedDuration(_ seconds: Int) -> String {
-        let minutes = seconds / 60
-        let remainingSeconds = seconds % 60
+    func formattedTime(_ seconds: TimeInterval) -> String {
+        let minutes = Int(seconds) / 60
+        let remainingSeconds = Int(seconds) % 60
         return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
