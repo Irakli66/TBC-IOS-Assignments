@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct MusicfyApp: App {
+    @AppStorage("isDarkTheme") private var isDarkTheme = false
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .preferredColorScheme(isDarkTheme ? .dark : .light)
         }
     }
 }
