@@ -60,7 +60,7 @@ final class HomeViewModel: ObservableObject {
                 let url = URL(fileURLWithPath: path)
                 do {
                     let audioPlayer = try AVAudioPlayer(contentsOf: url)
-                    song.duration = Int(audioPlayer.duration)
+                    song.duration = audioPlayer.duration
                 } catch {
                     print("Failed to load audio file duration: \(error.localizedDescription)")
                 }

@@ -13,6 +13,6 @@ struct SongModel {
     let artCover: String
     let artist: String
     let album: String
-    var duration: Int = 0
+    var duration: TimeInterval = 0.0
     var isPlaying: Bool = false
 }

@@ -8,7 +8,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var isSheetPresented: Bool = false
+    @State private var isFullScreen = false
     
     var body: some View {
         ZStack {
@@ -30,51 +30,13 @@ struct HomeView: View {
                     Toggle(isOn: $viewModel.isDarkTheme){
                         
                     }
-                    .toggleStyle(SwitchToggleStyle(tint: Color.blue))
+                    .toggleStyle(SwitchToggleStyle(tint: Color.mainBackground))
                 }
                 .frame(maxWidth: 380)
+                
                 List {
                     ForEach(viewModel.songs, id: \.self.id) { song in
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack(spacing: 16) {
-                                Image(song.artCover)
-                                    .resizable()
-                                    .frame(width: 75, height: 75)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                VStack(alignment: .leading) {
-                                    Text(song.title)
-                                        .font(.headline)
-                                        .foregroundColor( viewModel.selectedSong?.id == song.id ? .green : .primary)
-                                    
-                                    HStack {
-                                        Text(song.artist)
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                        Text("•")
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                        
-                                        Text(song.album)
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                                Spacer()
-                                VStack {
-                                    if viewModel.selectedSong?.id == song.id {
-                                        Image(systemName: "cellularbars")
-                                            .foregroundStyle(.green)
-                                    }
-                                    Spacer()
-                                }
-                                
-                            }
-                            .padding(.vertical, 15)
-                            .padding(.horizontal, 10)
-                            .background(Color.mainBackground.opacity(0.9))
-                            .cornerRadius(15)
-                            .shadow(radius: 10)
-                        }
+                        SongView(song: song, viewModel: viewModel)
                         .listRowBackground(Color.clear)
                         .onTapGesture {
                             viewModel.selectSong(song: song)
@@ -85,7 +47,9 @@ struct HomeView: View {
                 .listStyle(.plain)
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
+                
                 Spacer()
+                
                 VStack(alignment: .leading, spacing: 8) {
                     VStack {
                         HStack(spacing: 16) {
@@ -131,20 +95,19 @@ struct HomeView: View {
                                 Text(viewModel.formattedTime(viewModel.currentTime))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
-                                Text("/")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                                Spacer()
                                 Text(viewModel.formattedTime(TimeInterval(viewModel.selectedSong?.duration ?? 0)))
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
+                            ProgressBar(progress: $viewModel.currentTime, duration: viewModel.selectedSong?.duration ?? 0)
                         }
                     }
                     .padding()
                     .background(.mainBackground)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .onTapGesture {
-                        isSheetPresented = true
+                        isFullScreen = true
                     }
                 }
                 .frame(maxWidth: 380)
@@ -155,8 +118,7 @@ struct HomeView: View {
     }
 }
 
+
 #Preview {
     HomeView()
 }
-
-
