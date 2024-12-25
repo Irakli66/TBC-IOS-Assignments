@@ -68,7 +68,10 @@ struct SongDetails: View {
                 ZStack {
                     HStack {
                         Image(systemName: "shuffle")
-                            .foregroundStyle(.customShape)
+                            .foregroundStyle(viewModel.isShuffleActive ? .green : .customShape)
+                            .onTapGesture {
+                                viewModel.isShuffleActive.toggle()
+                            }
                         Spacer()
                         Image(systemName: "point.forward.to.point.capsulepath")
                             .foregroundStyle(viewModel.selectedSong?.isLoopActive ?? false ? .green : .customShape)

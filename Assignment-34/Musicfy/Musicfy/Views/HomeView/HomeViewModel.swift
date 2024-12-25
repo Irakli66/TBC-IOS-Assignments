@@ -11,6 +11,7 @@ final class HomeViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var songs: [SongModel] = []
     @Published var selectedSong: SongModel?
     @Published var currentTime: TimeInterval = 0
+    @Published var isShuffleActive: Bool = false
     @AppStorage("isDarkTheme") var isDarkTheme: Bool = false
     
     private var audioPlayer: AVAudioPlayer?
@@ -103,15 +104,28 @@ final class HomeViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func playNextSong() {
-        guard let currentSong = selectedSong,
-              let currentIndex = songs.firstIndex(where: { $0.id == currentSong.id }) else {
+        guard let currentSong = selectedSong else {
             return
         }
         
-        let nextIndex = (currentIndex + 1) % songs.count
-        let nextSong = songs[nextIndex]
-        selectSong(song: nextSong)
+        if isShuffleActive {
+            var randomSong: SongModel?
+            repeat {
+                randomSong = songs.randomElement()
+            } while randomSong?.id == currentSong.id && songs.count > 1
+            
+            if let randomSong = randomSong {
+                selectSong(song: randomSong)
+            }
+        } else {
+            if let currentIndex = songs.firstIndex(where: { $0.id == currentSong.id }) {
+                let nextIndex = (currentIndex + 1) % songs.count
+                let nextSong = songs[nextIndex]
+                selectSong(song: nextSong)
+            }
+        }
     }
+    
     
     func playPreviousSong() {
         guard let currentSong = selectedSong,
