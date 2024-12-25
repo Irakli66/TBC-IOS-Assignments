@@ -69,12 +69,14 @@ struct SongDetails: View {
                     HStack {
                         Image(systemName: "shuffle")
                             .foregroundStyle(viewModel.isShuffleActive ? .green : .customShape)
+                            .font(.system(size: 20))
                             .onTapGesture {
                                 viewModel.isShuffleActive.toggle()
                             }
                         Spacer()
                         Image(systemName: "point.forward.to.point.capsulepath")
                             .foregroundStyle(viewModel.selectedSong?.isLoopActive ?? false ? .green : .customShape)
+                            .font(.system(size: 20))
                             .onTapGesture {
                                 viewModel.selectedSong?.isLoopActive.toggle()
                             }

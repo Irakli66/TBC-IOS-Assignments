@@ -49,11 +49,14 @@ final class HomeViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     private func loadSongs() {
         let songData = [
+            SongModel(songFileName: "niagara", title: "Niagara Falls", artCover: "metro2", artist: "Metro Boomin", album: "H&V"),
             SongModel(songFileName: "MyEyes", title: "My Eyes", artCover: "travis", artist: "Travis Scott", album: "Utopia"),
+            SongModel(songFileName: "9", title: "9", artCover: "drake", artist: "Drake", album: "Views"),
             SongModel(songFileName: "RealFriends", title: "Real Friends", artCover: "kanye", artist: "Kanye West", album: "Life of Pablo"),
             SongModel(songFileName: "Wolves", title: "Wolves", artCover: "kanye", artist: "Kanye West", album: "Life of Pablo"),
-            SongModel(songFileName: "WeStillDontTrustYou", title: "We Still Don't Trust You", artCover: "metro", artist: "Metro Boomin", album: "WSDTY"),
-            SongModel(songFileName: "tvoff", title: "TV Off", artCover: "kendrick", artist: "Kendrick Lamar", album: "GNX")
+            SongModel(songFileName: "telekinesis", title: "Telekinesis", artCover: "travis", artist: "Travis Scott", album: "Utopia"),
+            SongModel(songFileName: "tvoff", title: "TV Off", artCover: "kendrick", artist: "Kendrick Lamar", album: "GNX"),
+            SongModel(songFileName: "WeStillDontTrustYou", title: "We Still Don't Trust You", artCover: "metro", artist: "Metro Boomin", album: "WSDTY")
         ]
         
         for var song in songData {
