@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SongView: View {
     let song: SongModel
-    @ObservedObject var viewModel: HomeViewModel
+    @EnvironmentObject var viewModel: HomeViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

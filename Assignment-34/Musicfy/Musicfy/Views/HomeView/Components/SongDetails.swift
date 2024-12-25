@@ -7,9 +7,10 @@
 import SwiftUI
 
 struct SongDetails: View {
-    @ObservedObject var viewModel: HomeViewModel
+    @EnvironmentObject var viewModel: HomeViewModel
     let song: SongModel?
     @Binding var isFullScreen: Bool
+    @State private var dragOffset: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 50) {
@@ -29,6 +30,19 @@ struct SongDetails: View {
                     .resizable()
                     .frame(maxHeight: 400)
                     .cornerRadius(12)
+                    .offset(x: dragOffset)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                dragOffset = value.translation.width
+                            }
+                            .onEnded { value in
+                                handleSwipe(value: value)
+                                withAnimation(.spring()) {
+                                    dragOffset = 0
+                                }
+                            }
+                    )
                 VStack(alignment: .leading) {
                     Text(song.title)
                         .font(.headline)
@@ -42,11 +56,11 @@ struct SongDetails: View {
                     ProgressBar(progress: $viewModel.currentTime, duration: viewModel.selectedSong?.duration ?? 0)
                     HStack {
                         Text(viewModel.formattedTime(viewModel.currentTime))
-                            .font(.caption)
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.secondary)
                         Spacer()
                         Text(viewModel.formattedTime(TimeInterval(viewModel.selectedSong?.duration ?? 0)))
-                            .font(.caption)
+                            .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(.secondary)
                     }
                 }
@@ -110,6 +124,16 @@ struct SongDetails: View {
                 }
             Spacer()
             Text("•••")
+        }
+    }
+    
+    private func handleSwipe(value: DragGesture.Value) {
+        let horizontalTranslation = value.translation.width
+        
+        if horizontalTranslation < -50 {
+            viewModel.playNextSong()
+        } else if horizontalTranslation > 50 {
+            viewModel.playPreviousSong()
         }
     }
 }
