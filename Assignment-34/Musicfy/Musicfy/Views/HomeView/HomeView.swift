@@ -32,6 +32,7 @@ struct HomeView: View {
                     }
                     .toggleStyle(SwitchToggleStyle(tint: Color.mainBackground))
                 }
+                .padding(.top, 10)
                 .frame(maxWidth: 380)
                 
                 List {
@@ -43,7 +44,7 @@ struct HomeView: View {
                             }
                     }
                 }
-                .frame(maxWidth: 400)
+                .frame(maxWidth: 395)
                 .listStyle(.plain)
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
