@@ -7,7 +7,7 @@
 import SwiftUI
 import AVFoundation
 
-final class HomeViewModel: ObservableObject {
+final class HomeViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var songs: [SongModel] = []
     @Published var selectedSong: SongModel?
     @Published var currentTime: TimeInterval = 0
@@ -16,7 +16,8 @@ final class HomeViewModel: ObservableObject {
     private var audioPlayer: AVAudioPlayer?
     private var timer: Timer?
     
-    init() {
+    override init() {
+        super.init()
         loadSongs()
     }
     
@@ -80,6 +81,7 @@ final class HomeViewModel: ObservableObject {
         
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.delegate = self
             audioPlayer?.play()
             selectedSong.isPlaying = true
             startTimer()
@@ -126,5 +128,14 @@ final class HomeViewModel: ObservableObject {
         let minutes = Int(seconds) / 60
         let remainingSeconds = Int(seconds) % 60
         return String(format: "%02d:%02d", minutes, remainingSeconds)
+    }
+    
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            self?.stopTimer()
+            self?.currentTime = 0
+            self?.selectedSong?.isPlaying = false
+        }
     }
 }
