@@ -21,7 +21,7 @@ struct SongView: View {
                 VStack(alignment: .leading) {
                     Text(song.title)
                         .font(.headline)
-                        .foregroundColor( viewModel.selectedSong?.id == song.id ? .green : .primary)
+                        .foregroundColor(.primary)
                     
                     HStack {
                         Text(song.artist)

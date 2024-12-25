@@ -18,7 +18,6 @@ final class HomeViewModel: ObservableObject {
     
     init() {
         loadSongs()
-        selectedSong = songs.first
     }
     
     func selectSong(song: SongModel) {
@@ -99,6 +98,28 @@ final class HomeViewModel: ObservableObject {
         audioPlayer?.pause()
         selectedSong?.isPlaying = false
         stopTimer()
+    }
+    
+    func playNextSong() {
+        guard let currentSong = selectedSong,
+              let currentIndex = songs.firstIndex(where: { $0.id == currentSong.id }) else {
+            return
+        }
+        
+        let nextIndex = (currentIndex + 1) % songs.count
+        let nextSong = songs[nextIndex]
+        selectSong(song: nextSong)
+    }
+    
+    func playPreviousSong() {
+        guard let currentSong = selectedSong,
+              let currentIndex = songs.firstIndex(where: { $0.id == currentSong.id }) else {
+            return
+        }
+        
+        let previousIndex = (currentIndex - 1 + songs.count) % songs.count
+        let previousSong = songs[previousIndex]
+        selectSong(song: previousSong)
     }
     
     func formattedTime(_ seconds: TimeInterval) -> String {
