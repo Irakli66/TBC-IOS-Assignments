@@ -71,7 +71,10 @@ struct SongDetails: View {
                             .foregroundStyle(.customShape)
                         Spacer()
                         Image(systemName: "point.forward.to.point.capsulepath")
-                            .foregroundStyle(.customShape)
+                            .foregroundStyle(viewModel.selectedSong?.isLoopActive ?? false ? .green : .customShape)
+                            .onTapGesture {
+                                viewModel.selectedSong?.isLoopActive.toggle()
+                            }
                     }
                     HStack {
                         Image(systemName: "arrowtriangle.backward.fill")

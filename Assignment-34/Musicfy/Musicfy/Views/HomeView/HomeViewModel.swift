@@ -133,9 +133,16 @@ final class HomeViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         DispatchQueue.main.async { [weak self] in
-            self?.stopTimer()
-            self?.currentTime = 0
-            self?.selectedSong?.isPlaying = false
+            guard let self = self else { return }
+            self.stopTimer()
+            self.currentTime = 0
+            
+            if self.selectedSong?.isLoopActive == true {
+                self.playSelectedSong()
+            } else {
+                self.selectedSong?.isPlaying = false
+                playNextSong()
+            }
         }
     }
 }

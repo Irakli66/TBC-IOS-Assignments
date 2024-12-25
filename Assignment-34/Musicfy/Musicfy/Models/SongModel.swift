@@ -15,4 +15,5 @@ struct SongModel {
     let album: String
     var duration: TimeInterval = 0.0
     var isPlaying: Bool = false
+    var isLoopActive: Bool = false
 }
