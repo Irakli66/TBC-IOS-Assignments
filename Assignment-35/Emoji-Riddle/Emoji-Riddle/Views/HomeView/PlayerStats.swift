@@ -8,7 +8,7 @@ import UIKit
 
 final class PlayerStats: UIStackView {
     private var player: PlayerModel?
-
+    
     private let stackViewOne: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +33,7 @@ final class PlayerStats: UIStackView {
         label.textAlignment = .center
         return label
     }()
-
+    
     private let playerStreakLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +42,7 @@ final class PlayerStats: UIStackView {
         label.textAlignment = .center
         return label
     }()
-
+    
     private let playerCorrectAnswersLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ final class PlayerStats: UIStackView {
         label.textAlignment = .center
         return label
     }()
-
+    
     private let playerWrongAnswersLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -60,17 +60,17 @@ final class PlayerStats: UIStackView {
         label.textAlignment = .center
         return label
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-
+    
     required init(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
     }
-
+    
     private func setupView() {
         axis = .vertical
         distribution = .fillEqually
@@ -83,7 +83,7 @@ final class PlayerStats: UIStackView {
         addArrangedSubview(stackViewOne)
         addArrangedSubview(stackViewTwo)
     }
-
+    
     func configure(with player: PlayerModel) {
         self.player = player
         playerScoreLabel.text = "Score: \(player.score)"

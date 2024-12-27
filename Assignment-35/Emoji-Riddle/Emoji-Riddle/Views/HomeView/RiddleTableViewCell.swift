@@ -20,7 +20,7 @@ final class RiddleTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 18)
-
+        
         return label
     }()
     
@@ -32,6 +32,12 @@ final class RiddleTableViewCell: UITableViewCell {
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
+    }()
+    
+    private lazy var answeredImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -53,20 +59,33 @@ final class RiddleTableViewCell: UITableViewCell {
     
     private func setupUI() {
         contentView.addSubview(riddleStackview)
+        contentView.addSubview(answeredImageView)
         [riddleLabel, riddleDifficultyLabel].forEach{ riddleStackview.addArrangedSubview($0) }
         
         NSLayoutConstraint.activate([
             riddleStackview.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
             riddleStackview.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
-            riddleStackview.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
-            riddleStackview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 20),
+            riddleStackview.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
+            answeredImageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
+            answeredImageView.topAnchor.constraint(equalTo: riddleStackview.bottomAnchor, constant: 5),
         ])
     }
     
     func configureCell(with riddle: RiddleModel) {
         riddleLabel.text = riddle.question
-        riddleDifficultyLabel.text = riddle.dificulty.rawValue
+        riddleDifficultyLabel.text = riddle.dificulty.rawValue.capitalized
+        
+        if riddle.isAnswered && riddle.correctAnswer == riddle.selectedAnswer {
+            answeredImageView.image = UIImage(systemName: "checkmark.circle")
+            answeredImageView.tintColor = .systemGreen
+        } else if riddle.isAnswered {
+            answeredImageView.image = UIImage(systemName: "xmark.circle")
+            answeredImageView.tintColor = .red
+        } else {
+            answeredImageView.image = nil
+        }
+        
     }
     
     override func layoutSubviews() {
@@ -75,3 +94,4 @@ final class RiddleTableViewCell: UITableViewCell {
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0))
     }
 }
+

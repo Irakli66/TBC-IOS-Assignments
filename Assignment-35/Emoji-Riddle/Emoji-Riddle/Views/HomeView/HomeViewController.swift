@@ -10,14 +10,14 @@ import UIKit
 class HomeViewController: UIViewController {
     private var currentCategory: RiddleCategory = .movies
     private let viewModel = HomeViewModel()
-
+    
     private let segmentControl: UISegmentedControl = {
         let segmentControl = UISegmentedControl(items: ["Movies", "Books", "Animes"])
         segmentControl.selectedSegmentIndex = 0
         segmentControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentControl
     }()
-
+    
     private let playerStatsView = PlayerStats()
     
     private let resetGameButton: UIButton = {
@@ -30,27 +30,27 @@ class HomeViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
         updatePlayerStats()
     }
-
+    
     private func setupUI() {
         setupSegmentControl()
         setupPlayerStats()
         setupResetGameButton()
         setupRiddleTableView()
     }
-
+    
     private func setupSegmentControl() {
         view.addSubview(segmentControl)
         
@@ -60,11 +60,11 @@ class HomeViewController: UIViewController {
         ])
         segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
     }
-
+    
     private func setupPlayerStats() {
         view.addSubview(playerStatsView)
         playerStatsView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             playerStatsView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 25),
             playerStatsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -89,33 +89,33 @@ class HomeViewController: UIViewController {
             self.playerStatsView.configure(with: self.viewModel.getPlayer() )
         }), for: .touchUpInside)
     }
-
+    
     private func setupRiddleTableView() {
         view.addSubview(tableView)
-
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: resetGameButton.bottomAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(RiddleTableViewCell.self, forCellReuseIdentifier: "RiddleTableViewCell")
     }
-
+    
     private func updatePlayerStats() {
         playerStatsView.configure(with: viewModel.getPlayer())
-
+        
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updatePlayerStats()
         tableView.reloadData()
     }
-
+    
     @objc private func segmentChanged() {
         switch segmentControl.selectedSegmentIndex {
         case 0:
@@ -135,23 +135,23 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         getRiddlesForCurrentCategory().count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "RiddleTableViewCell", for: indexPath) as? RiddleTableViewCell else {
             return UITableViewCell()
         }
-
+        
         let riddles = getRiddlesForCurrentCategory()
         let currentRiddle = riddles[indexPath.row]
         cell.configureCell(with: currentRiddle)
-
+        
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let riddles = getRiddlesForCurrentCategory()
         let currentRiddle = riddles[indexPath.row]

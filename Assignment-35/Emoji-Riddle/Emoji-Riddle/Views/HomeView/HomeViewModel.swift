@@ -275,7 +275,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     func updateRiddle(_ updatedRiddle: RiddleModel) {
-        if let index = riddles.firstIndex(where: { $0.question == updatedRiddle.question }) {
+        if let index = riddles.firstIndex(where: { $0.id == updatedRiddle.id }) {
             riddles[index] = updatedRiddle
             saveRiddlesToUserDefaults()
         }
@@ -344,9 +344,9 @@ final class HomeViewModel: ObservableObject {
     
     func resetGame() {
         self.player = PlayerModel(name: "John")
-
+        
         self.riddles = getDefaultRiddles()
-
+        
         savePlayerToUserDefaults()
         saveRiddlesToUserDefaults()
     }
