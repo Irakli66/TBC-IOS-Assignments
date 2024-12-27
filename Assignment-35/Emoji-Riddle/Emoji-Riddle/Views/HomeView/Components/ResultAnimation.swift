@@ -1,5 +1,5 @@
 //
-//  WinningAnimation.swift
+//  ResultAnimation.swift
 //  Emoji-Riddle
 //
 //  Created by irakli kharshiladze on 27.12.24.
@@ -7,15 +7,15 @@
 
 import UIKit
 
-class WinningAnimation {
-    static func show(on view: UIView, message: String, completion: @escaping () -> Void) {
+class ResultAnimation {
+    static func show(on view: UIView, message: String, color: UIColor, completion: @escaping () -> Void) {
         let winningLabel = UILabel()
         winningLabel.text = message
         winningLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         winningLabel.textAlignment = .center
         winningLabel.textColor = .white
         winningLabel.numberOfLines = 0
-        winningLabel.backgroundColor = .systemGreen
+        winningLabel.backgroundColor = color
         winningLabel.layer.cornerRadius = 12
         winningLabel.clipsToBounds = true
         winningLabel.translatesAutoresizingMaskIntoConstraints = false

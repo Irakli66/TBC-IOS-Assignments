@@ -69,7 +69,7 @@ class HomeViewController: UIViewController {
             playerStatsView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 25),
             playerStatsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             playerStatsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            playerStatsView.heightAnchor.constraint(equalToConstant: 50)
+            playerStatsView.heightAnchor.constraint(equalToConstant: 75)
         ])
     }
     
@@ -105,6 +105,7 @@ class HomeViewController: UIViewController {
     private func updatePlayerStats() {
         playerStatsView.configure(with: viewModel.getPlayer())
         checkForWinningScore(150)
+        sheckForLosing(5)
     }
     
     private func resetGame() {
@@ -115,7 +116,15 @@ class HomeViewController: UIViewController {
     
     private func checkForWinningScore(_ score: Int) {
         if viewModel.getPlayer().score >= score {
-            WinningAnimation.show(on: view, message: "🎉 You have reached \(score) points! You Win! 🎉") {
+            ResultAnimation.show(on: view, message: "🎉 You have reached \(score) points! You Win! 🎉", color: .systemGreen) {
+                self.resetGame()
+            }
+        }
+    }
+    
+    private func sheckForLosing(_ wrongCount: Int) {
+        if viewModel.getPlayer().incorrectAnswers >= wrongCount {
+            ResultAnimation.show(on: view, message: "You have made \(wrongCount) wrong answers. You lose! 💔", color: .red) {
                 self.resetGame()
             }
         }
@@ -127,6 +136,7 @@ class HomeViewController: UIViewController {
         updatePlayerStats()
         tableView.reloadData()
         checkForWinningScore(150)
+        sheckForLosing(5)
     }
     
     @objc private func segmentChanged() {

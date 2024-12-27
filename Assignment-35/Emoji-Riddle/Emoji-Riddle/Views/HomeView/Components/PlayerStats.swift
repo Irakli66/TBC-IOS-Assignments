@@ -25,6 +25,7 @@ final class PlayerStats: UIStackView {
         return stackView
     }()
     
+    
     private let playerScoreLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -61,6 +62,16 @@ final class PlayerStats: UIStackView {
         return label
     }()
     
+    private let livesCounterLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .label
+        label.text = "Lives: 5"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.textAlignment = .center
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -82,6 +93,7 @@ final class PlayerStats: UIStackView {
         stackViewTwo.addArrangedSubview(playerWrongAnswersLabel)
         addArrangedSubview(stackViewOne)
         addArrangedSubview(stackViewTwo)
+        addArrangedSubview(livesCounterLabel)
     }
     
     func configure(with player: PlayerModel) {
@@ -90,5 +102,6 @@ final class PlayerStats: UIStackView {
         playerStreakLabel.text = "Streak: \(player.streak) \(player.streak >= 5 ? "🔥" : "")"
         playerCorrectAnswersLabel.text = "Correct: \(player.correctAnswers)"
         playerWrongAnswersLabel.text = "Wrong: \(player.incorrectAnswers)"
+        livesCounterLabel.text = "Lives: \(5 - player.incorrectAnswers)"
     }
 }
