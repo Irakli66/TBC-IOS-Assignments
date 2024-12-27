@@ -5,10 +5,9 @@
 //  Created by irakli kharshiladze on 27.12.24.
 //
 
-import Foundation
+import SwiftUI
 
-final class HomeViewModel {
-    private let Player = PlayerModel(name: "John")
+final class HomeViewModel: ObservableObject {
     private let riddles: [RiddleModel] = [
         // Movies
         RiddleModel(
@@ -226,8 +225,49 @@ final class HomeViewModel {
             dificulty: .medium
         )
     ]
+    @Published var player: PlayerModel {
+        didSet {
+            savePlayerToUserDefaults()
+        }
+    }
     
+    private let playerKey = "playerData"
     
+    init() {
+        self.player = PlayerModel(name: "John")
+        
+        if let loadedPlayer = loadPlayerFromUserDefaults() {
+            self.player = loadedPlayer
+        }
+    }
+    
+    func savePlayerToUserDefaults() {
+        do {
+            let data = try JSONEncoder().encode(player)
+            UserDefaults.standard.set(data, forKey: playerKey)
+        } catch {
+            print("Failed to save player: \(error)")
+        }
+    }
+    
+    func loadPlayerFromUserDefaults() -> PlayerModel? {
+        guard let data = UserDefaults.standard.data(forKey: playerKey) else { return nil }
+        do {
+            return try JSONDecoder().decode(PlayerModel.self, from: data)
+        } catch {
+            print("Failed to load player: \(error)")
+            return nil
+        }
+    }
+    
+    func getPlayer() -> PlayerModel {
+        if let loadedPlayer = loadPlayerFromUserDefaults() {
+            self.player = loadedPlayer
+            return loadedPlayer
+        } else {
+            return player
+        }
+    }
     
     func getCategorizedRiddles(_ category: RiddleCategory) -> [RiddleModel] {
         riddles.filter { $0.category == category }
@@ -241,5 +281,17 @@ final class HomeViewModel {
         let filteredRiddles = getCategorizedRiddles(category)
         guard index >= 0 && index < filteredRiddles.count else { return nil }
         return filteredRiddles[index]
+    }
+    
+    func updatePlayerStats(forCorrectAnswer correct: Bool, score: Int) {
+        if correct {
+            player.correctAnswers += 1
+            player.streak += 1
+            player.score += score
+        } else {
+            player.incorrectAnswers += 1
+            player.streak = 0
+        }
+        savePlayerToUserDefaults()
     }
 }

@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct PlayerModel {
-    let id: UUID = UUID()
+struct PlayerModel: Codable {
+    var id: UUID = UUID()
     let name: String
-    let score: Int = 0
-    let createdAt: Date = Date()
-    let correctAnswers: Int = 0
-    let incorrectAnswers: Int = 0
-    let streak: Int = 0
+    var score: Int = 0
+    var createdAt: Date = Date()
+    var correctAnswers: Int = 0
+    var incorrectAnswers: Int = 0
+    var streak: Int = 0
 }

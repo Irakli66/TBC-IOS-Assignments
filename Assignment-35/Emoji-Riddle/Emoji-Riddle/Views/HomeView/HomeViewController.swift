@@ -24,6 +24,13 @@ class HomeViewController: UIViewController {
         return picker
     }()
     
+    private let playerScoreLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .black
+        return label
+    }()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,9 +51,16 @@ class HomeViewController: UIViewController {
     
     private func setupSegmentControl() {
         view.addSubview(segmentControl)
-        segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        segmentControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        view.addSubview(playerScoreLabel)
+        
+        NSLayoutConstraint.activate([
+            segmentControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            playerScoreLabel.centerXAnchor.constraint(equalTo: segmentControl.centerXAnchor),
+            playerScoreLabel.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 25)
+        ])
         segmentControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+        playerScoreLabel.text = "Your score: \(viewModel.getPlayer().score)"
     }
     
     @objc private func segmentChanged() {
@@ -60,7 +74,6 @@ class HomeViewController: UIViewController {
         default:
             break
         }
-        print("Current category: \(currentCategory)")
         tableView.reloadData()
     }
     
@@ -77,7 +90,7 @@ class HomeViewController: UIViewController {
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: playerScoreLabel.bottomAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -86,6 +99,12 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(RiddleTableViewCell.self, forCellReuseIdentifier: "RiddleTableViewCell")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        playerScoreLabel.text = "Your score: \(viewModel.getPlayer().score)"
+        tableView.reloadData()
     }
 }
 
@@ -110,7 +129,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
+        let riddles = getRiddlesForCurrentCategory()
+        let currentRiddle = riddles[indexPath.row]
+        let vc = RiddleDetailsViewController(riddle: currentRiddle)
+        vc.riddle = currentRiddle
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

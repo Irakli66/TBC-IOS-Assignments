@@ -6,14 +6,16 @@
 //
 import Foundation
 
-struct RiddleModel {
-    let id: UUID = UUID()
+struct RiddleModel: Codable {
+    var id: UUID = UUID()
     let question: String
-    let createdAt: Date = Date()
+    var createdAt: Date = Date()
     let correctAnswer: String
     let answers: [String]
     let category: RiddleCategory
     let dificulty: RiddleDifficulty
+    var selectedAnswer: String? = nil
+    var isAnswered: Bool = false
     
     var score: Int {
         switch dificulty {
@@ -24,13 +26,13 @@ struct RiddleModel {
     }
 }
 
-enum RiddleCategory: String {
+enum RiddleCategory: String, Codable {
     case movies = "Movies"
     case books = "Books"
     case animes = "Animes"
 }
 
-enum RiddleDifficulty: String {
+enum RiddleDifficulty: String, Codable {
     case easy = "Easy"
     case medium = "Medium"
     case hard = "Hard"
