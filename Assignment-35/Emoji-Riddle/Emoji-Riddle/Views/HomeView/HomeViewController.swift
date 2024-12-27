@@ -39,7 +39,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setupUI()
         updatePlayerStats()
     }
@@ -83,10 +83,7 @@ class HomeViewController: UIViewController {
         ])
         
         resetGameButton.addAction(UIAction(handler: {[weak self] action in
-            guard let self = self else { return }
-            self.viewModel.resetGame()
-            self.tableView.reloadData()
-            self.playerStatsView.configure(with: self.viewModel.getPlayer() )
+            self?.resetGame()
         }), for: .touchUpInside)
     }
     
@@ -107,13 +104,29 @@ class HomeViewController: UIViewController {
     
     private func updatePlayerStats() {
         playerStatsView.configure(with: viewModel.getPlayer())
-        
+        checkForWinningScore(150)
     }
+    
+    private func resetGame() {
+        viewModel.resetGame()
+        tableView.reloadData()
+        updatePlayerStats()
+    }
+    
+    private func checkForWinningScore(_ score: Int) {
+        if viewModel.getPlayer().score >= score {
+            WinningAnimation.show(on: view, message: "🎉 You have reached \(score) points! You Win! 🎉") {
+                self.resetGame()
+            }
+        }
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updatePlayerStats()
         tableView.reloadData()
+        checkForWinningScore(150)
     }
     
     @objc private func segmentChanged() {

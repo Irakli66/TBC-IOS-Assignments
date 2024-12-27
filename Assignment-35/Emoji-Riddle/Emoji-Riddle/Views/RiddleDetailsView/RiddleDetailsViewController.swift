@@ -24,7 +24,7 @@ class RiddleDetailsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
 
         if let updatedRiddle = viewModel.getRiddleDetail(with: riddle.question) {
             self.riddle = updatedRiddle

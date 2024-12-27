@@ -44,7 +44,7 @@ final class RiddleTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
         self.selectionStyle = .none
-        self.backgroundColor = .clear
+        self.backgroundColor = .systemBackground
         
         setupUI()
     }

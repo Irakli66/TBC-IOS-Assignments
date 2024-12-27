@@ -28,7 +28,7 @@ final class PlayerStats: UIStackView {
     private let playerScoreLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textAlignment = .center
         return label
@@ -37,7 +37,7 @@ final class PlayerStats: UIStackView {
     private let playerStreakLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textAlignment = .center
         return label
