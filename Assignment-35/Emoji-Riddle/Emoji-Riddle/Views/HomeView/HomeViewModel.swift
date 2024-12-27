@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class HomeViewModel: ObservableObject {
-    private let riddles: [RiddleModel] = [
+    private let defaultRiddles: [RiddleModel] = [
         // Movies
         RiddleModel(
             question: "🧊🛳️❄️❤️",
@@ -225,20 +225,64 @@ final class HomeViewModel: ObservableObject {
             dificulty: .medium
         )
     ]
+    
     @Published var player: PlayerModel {
         didSet {
             savePlayerToUserDefaults()
         }
     }
     
+    @Published var riddles: [RiddleModel] {
+        didSet {
+            saveRiddlesToUserDefaults()
+        }
+    }
+    
     private let playerKey = "playerData"
+    private let riddlesKey = "riddlesData"
     
     init() {
         self.player = PlayerModel(name: "John")
+        self.riddles = defaultRiddles
         
         if let loadedPlayer = loadPlayerFromUserDefaults() {
             self.player = loadedPlayer
         }
+        
+        if let loadedRiddles = loadRiddlesFromUserDefaults() {
+            self.riddles = loadedRiddles
+        }
+    }
+    
+    
+    func saveRiddlesToUserDefaults() {
+        do {
+            let data = try JSONEncoder().encode(riddles)
+            UserDefaults.standard.set(data, forKey: riddlesKey)
+        } catch {
+            print("Failed to save riddles: \(error)")
+        }
+    }
+    
+    func loadRiddlesFromUserDefaults() -> [RiddleModel]? {
+        guard let data = UserDefaults.standard.data(forKey: riddlesKey) else { return nil }
+        do {
+            return try JSONDecoder().decode([RiddleModel].self, from: data)
+        } catch {
+            print("Failed to load riddles: \(error)")
+            return nil
+        }
+    }
+    
+    func updateRiddle(_ updatedRiddle: RiddleModel) {
+        if let index = riddles.firstIndex(where: { $0.question == updatedRiddle.question }) {
+            riddles[index] = updatedRiddle
+            saveRiddlesToUserDefaults()
+        }
+    }
+    
+    func getDefaultRiddles() -> [RiddleModel] {
+        return defaultRiddles
     }
     
     func savePlayerToUserDefaults() {
@@ -283,6 +327,9 @@ final class HomeViewModel: ObservableObject {
         return filteredRiddles[index]
     }
     
+    func getRiddleDetail(with question: String) -> RiddleModel? {
+        return riddles.first { $0.question == question }
+    }
     func updatePlayerStats(forCorrectAnswer correct: Bool, score: Int) {
         if correct {
             player.correctAnswers += 1
@@ -293,5 +340,14 @@ final class HomeViewModel: ObservableObject {
             player.streak = 0
         }
         savePlayerToUserDefaults()
+    }
+    
+    func resetGame() {
+        self.player = PlayerModel(name: "John")
+
+        self.riddles = getDefaultRiddles()
+
+        savePlayerToUserDefaults()
+        saveRiddlesToUserDefaults()
     }
 }

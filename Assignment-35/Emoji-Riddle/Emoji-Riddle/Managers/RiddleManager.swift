@@ -8,9 +8,9 @@
 import Foundation
 
 protocol RiddleManagerProtocol {
-    
+
 }
 
 final class RiddleManager: RiddleManagerProtocol {
-    
+
 }
